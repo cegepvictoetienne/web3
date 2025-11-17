@@ -1,0 +1,113 @@
+site_name: Développement Web 3
+site_author: Étienne Rivard
+theme:
+  name: material
+  language: fr
+  features:
+    - content.code.copy
+  logo: images/logo.png
+  favicon: images/favicon.png
+  icon:
+    admonition:
+      note: fontawesome/solid/note-sticky
+      abstract: fontawesome/solid/book
+      info: fontawesome/solid/circle-info
+      tip: fontawesome/solid/bullhorn
+      success: fontawesome/solid/check
+      question: fontawesome/solid/circle-question
+      warning: fontawesome/solid/triangle-exclamation
+      failure: fontawesome/solid/bomb
+      danger: fontawesome/solid/skull
+      bug: fontawesome/solid/robot
+      example: fontawesome/solid/flask
+      quote: fontawesome/solid/quote-left
+
+plugins:
+  - search
+  - mkdocs-video:
+      video_autoplay: false
+      css_style:
+        height: 400px
+        min-width: 800px
+
+extra_css:
+  - css/extra.css
+
+extra_javascript:
+  - javascript/alltarget.js
+  - javascript/addTranslations.js
+
+extra:
+  analytics:
+    provider: google
+    property: G-E4EGLJXEM1
+
+nav:
+  - 'Page principale': 'index.md'
+  - 'Horaire': 'horaire.md'
+  - 'Leçons':
+      - 'Node.js et TypeScript':
+          - 'Introduction à TypeScript': 'lecons/typescript/introduction_typescript.md'
+          - 'NPM': 'lecons/typescript/npm.md'
+          - 'TypeScript 2': 'lecons/typescript/typescript_2.md'
+          - 'Javascript asynchrone': 'lecons/typescript/javascript_async.md'
+          - 'Prettier': 'lecons/typescript/prettier.md'
+      - 'React':
+          - 'Introduction à React': 'lecons/react/introduction_react.md'
+          - "Structure typique d'un projet React": 'lecons/react/structure_projet_react.md'
+          - 'Penser en React': 'lecons/react/penser_en_react.md'
+          - 'Styles : React et MUI': 'lecons/react/react_mui.md'
+          - 'Styles : React - TailwindCSS': 'lecons/react/react_tw.md'
+          - 'Router - useParams': 'lecons/react/react3.md'
+          - 'useContext et API': 'lecons/react/react4.md'
+          - 'Règles de Réact': 'lecons/react/regles_react.md'
+          - 'Internationalisation': 'lecons/react/internationalisation.md'
+      - 'Next.js':
+          - 'Introduction à Next.js': 'lecons/next.js/introduction.md'
+      - 'Déploiement':
+          - 'Inscription à Azure': 'lecons/deploiement/azure_inscription.md'
+          - 'React dans Azure': 'lecons/deploiement/azure_react.md'
+  - 'Exercices':
+      - 'Typescript et lodash': 'exercices/lodash.md'
+      - 'Introduction à React': 'exercices/react_intro.md'
+      - 'React et les styles': 'exercices/react_styles.md'
+      - 'React et les routes': 'exercices/react_routes.md'
+      - 'React et contexte': 'exercices/react_contexte.md'
+      - "React et l'internationalisation": 'exercices/internationalisation.md'
+      - 'Préparation examen React': 'exercices/react_prep_exam_pendu.md'
+      - 'Azure': 'exercices/azure.md'
+  - 'Projet intégrateur': 'projet_integrateur.md'
+  - 'À propos': 'apropos.md'
+  - "Techniques de l'informatique": 'https://techinfo.profinfo.ca'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - attr_list
+  - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - markdown_include.include:
+      base_path: code
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+docs_dir: 'docs'
+site_dir: 'www'
+use_directory_urls: True
