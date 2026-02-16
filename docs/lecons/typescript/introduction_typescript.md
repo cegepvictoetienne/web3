@@ -2,33 +2,7 @@
 
 TypeScript c’est du JavaScript avec des types!
 
-## Pourquoi utiliser TypeScript?  
-
-TypeScript est un langage de programmation qui a gagné en popularité grâce à son utilité dans le développement logiciel moderne. Voici quelques raisons pour lesquelles vous pourriez envisager d'utiliser TypeScript dans vos programmes :  
-
-1. **Sécurité et robustesse du code** : TypeScript introduit un système de types statiques qui permet de détecter des erreurs de typage dès la phase de développement. Cela aide à éviter de nombreux bugs liés aux types et garantit une meilleure qualité du code.  
-
-2. **Meilleure maintenance** : Les systèmes de types aident les développeurs à comprendre plus facilement le code existant, à détecter des erreurs potentielles et à faciliter les refontes. Cela conduit à une meilleure maintenance à long terme.  
-
-3. **Meilleure IDE (environnement de développement intégré) support** : Comme TypeScript fournit des informations détaillées sur les types, les IDE peuvent offrir une assistance au code plus puissante, comme l'autocomplétion, la vérification en temps réel et la navigation dans le code.  
-
-4. **Évolution en douceur depuis JavaScript** : TypeScript est un sur-ensemble de JavaScript, ce qui signifie que vous pouvez migrer progressivement votre code JavaScript existant vers TypeScript sans avoir à tout réécrire. Les fichiers TypeScript peuvent contenir du code JavaScript valide.  
-
-5. **Évite les erreurs courantes** : Les types statiques aident à éviter des erreurs courantes comme les références null ou undefined, les erreurs de type et d'autres problèmes fréquents en JavaScript.  
-
-6. **Facilite la collaboration** : Les types statiques documentent de manière plus explicite les attentes concernant les données et les fonctions, ce qui facilite la collaboration entre les développeurs.  
-
-7. **Meilleure échelle et modularité** : TypeScript encourage la construction d'applications modulaires avec des types spécifiques pour les interfaces et les contrats entre les modules. Cela rend les applications plus faciles à développer et à faire évoluer.  
-
-8. **Communauté active et écosystème croissant** : TypeScript est soutenu par Microsoft et a une communauté active. De nombreux outils et bibliothèques populaires sont également compatibles avec TypeScript.  
-
-9. **Compatibilité avec les normes ES** : TypeScript suit généralement les normes ES (ECMAScript), ce qui signifie qu'il prend en charge les fonctionnalités JavaScript modernes tout en ajoutant des fonctionnalités supplémentaires.  
-
-10. **Meilleure documentation et apprentissage progressif** : TypeScript offre des informations plus détaillées sur le code, ce qui peut faciliter l'apprentissage d'un nouveau codebase ou l'intégration de nouveaux membres dans une équipe de développement.  
-
-En résumé, utiliser TypeScript peut améliorer la qualité, la robustesse et la maintenabilité de votre code, tout en offrant des avantages en termes d'assistance au développement et de collaboration. Cependant, il est important de noter que le choix d'utiliser TypeScript dépend des besoins spécifiques de votre projet et de votre équipe.  
-
-Aide à trouver les erreurs dans notre code.
+Pourquoi utiliser TypeScript? Ça aide à trouver les erreurs dans notre code.  
 
 !!! manuel  
     [Manuel TypeScript](https://www.typescriptlang.org/fr/docs/handbook/intro.html)  
@@ -260,4 +234,206 @@ Quelques paramètres utiles :
 
 !!! manuel    
     [What is a tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)  
-    [tsconfig reference](https://www.typescriptlang.org/tsconfig)  
+    [tsconfig reference](https://www.typescriptlang.org/tsconfig)   
+
+
+
+## Union de types  
+
+L’union de type permet d’indiquer à TypeScript que nous acceptons deux types de données pour une variable ou un argument de fonction. Par exemple :  
+
+``` ts title="union.ts"
+function devineMonAge(age: number | string) {
+    console.log(`Ton age est ${age}`);
+}
+
+devineMonAge(40);
+devineMonAge('Trente huit');
+
+```
+
+!!! manuel  
+    [Union dans TypeScript](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes-func.html#unions)  
+
+
+
+## Rétrécir le type  
+
+Quand nous acceptons plus d’un type pour un argument, il est parfois nécessaire de bien déterminer le type dans le corps de la fonction :  
+
+Par exemple :  
+
+``` ts title="retrecir.ts"
+function doubler(item: number | string) {
+    if (typeof item === 'string') {
+        return `${item} - ${item}`;
+    }   
+    return item * 2;
+}
+
+console.log(doubler('Allo'));
+console.log(doubler(12));
+```  
+
+!!! manuel  
+    [Rétrécir le type - Manuel TypeScript](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)  
+
+
+
+## Union de type pour créer un alias  
+
+``` ts title="alias.ts"
+type Utilisateur = {
+    nom: string;
+    age: number;
+    actif: boolean;
+};
+
+type Administrateur = {
+    nom: string;
+    niveau: number;
+};
+
+type Employe = Utilisateur | Administrateur;
+
+```
+
+!!! manuel  
+    [Alias de types - Manuel TypeScript](https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#reusable-types-type-aliases)  
+
+
+## Rétrécir le type – autre exemple  
+
+``` ts title="retrecir2.ts"
+const roy: Administrateur = {
+    nom: 'Roy',
+    niveau: 99,
+};
+
+const richmond: Utilisateur = {
+    nom: 'Richmond',
+    age: 40,
+    actif: true,
+};
+
+/**
+ * Dire bonjour à un employé
+ * 
+ * @param {Employe} employe - L'employé à qui on dit bonjour 
+ * 
+ */
+function direBonjour(employe: Employe) {
+    if ('niveau' in employe) {
+        console.log(
+        `Bonjour Adminisatrateur ${employe.nom} de niveau ${employe.niveau}`
+        );
+        return;
+    }
+    console.log(`Bonjour Utilisateur ${employe.nom} agé de ${employe.age} ans`);
+}
+
+direBonjour(roy);
+direBonjour(richmond);
+
+```
+
+## Union de type – pour restreindre les valeurs  
+
+``` ts title="chat.ts"
+type Chat {
+    nom: string,
+    age: number,
+    race: 'Ragdoll' | 'Siamois' | 'Sphynx',
+};
+
+const fanta : Chat = {
+    nom: 'Fanta',
+    age: 8,
+    race: 'Ragdoll',
+};
+
+/*
+ * La race pour Furguie n'est pas acceptée pour le type Chat
+ */
+const furguie : Chat = {
+    nom: 'Furguie',
+    age: 3,
+    race: 'colorpoint',
+};
+
+```
+
+<figure markdown>
+  ![ts-union](images/ts-union.png){ width="600" }
+  <figcaption>Erreur lorsque la mauvaise valeur est assignée.</figcaption>
+</figure>
+
+## Enum  
+
+Un enum nous permet de définir un ensemble de constantes nommées.  
+
+``` ts title="race.ts"
+enum Race {
+    Ragdoll,
+    Siamois,
+    Sphynx,
+}
+
+type Chat = {
+    nom: string;
+    age: number;
+    race: Race;
+};
+
+const fanta: Chat = {
+    nom: 'Fanta',
+    age: 8,
+    race: Race.Ragdoll,
+};
+
+```
+
+!!! manuel  
+    [Enums - Manuel TypeScript](https://www.typescriptlang.org/docs/handbook/enums.html#handbook-content)  
+
+
+## Interface  
+
+Une interface est une façon différente en TypeScript pour décrire la forme d’un objet :  
+
+``` ts title="race.ts"
+enum Race {
+    Ragdoll,
+    Siamois,
+    Sphynx,
+}
+
+interface Chat {
+    nom: string;
+    age: number;
+    race: Race;
+};
+
+const fanta: Chat = {
+    nom: 'Fanta',
+    age: 8,
+    race: Race.Ragdoll,
+};
+
+```
+
+!!! manuel  
+    [Interfaces - Manuel TypeScript](https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#reusable-types-interfaces)  
+
+
+## Generics  
+
+Comme dans C#, TypeScript support les generics :  
+
+``` ts title="generics.ts"
+const listeDeChats : Array<Chat> = [];
+```
+
+!!! manuel  
+    [Generics - Manuel TypeScript](https://www.typescriptlang.org/docs/handbook/2/generics.html#handbook-content)  
+

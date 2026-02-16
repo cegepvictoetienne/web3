@@ -51,6 +51,7 @@ nav:
           - 'NPM': 'lecons/typescript/npm.md'
           - 'TypeScript 2': 'lecons/typescript/typescript_2.md'
           - 'Javascript asynchrone': 'lecons/typescript/javascript_async.md'
+          - 'ESLint': 'lecons/typescript/eslint.md'
           - 'Prettier': 'lecons/typescript/prettier.md'
       - 'React':
           - 'Introduction à React': 'lecons/react/introduction_react.md'
@@ -64,6 +65,7 @@ nav:
           - 'Internationalisation': 'lecons/react/internationalisation.md'
       - 'Next.js':
           - 'Introduction à Next.js': 'lecons/next.js/introduction.md'
+          - 'Mappage objet et bd relationnelle': 'lecons/next.js/orm.md'
       - 'Déploiement':
           - 'Inscription à Azure': 'lecons/deploiement/azure_inscription.md'
           - 'React dans Azure': 'lecons/deploiement/azure_react.md'
