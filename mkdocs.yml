@@ -55,6 +55,7 @@ nav:
           - 'Prettier': 'lecons/typescript/prettier.md'
       - 'React':
           - 'Introduction à React': 'lecons/react/introduction_react.md'
+          - 'Mécanique de React': 'lecons/react/mecanique_react.md'
           - "Structure typique d'un projet React": 'lecons/react/structure_projet_react.md'
           - 'Penser en React': 'lecons/react/penser_en_react.md'
           - 'Styles : React et MUI': 'lecons/react/react_mui.md'

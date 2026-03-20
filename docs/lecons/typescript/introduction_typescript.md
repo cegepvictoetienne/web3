@@ -257,7 +257,80 @@ devineMonAge('Trente huit');
 
 
 
-## Rétrécir le type  
+## Égalité : `==` vs `===`
+
+JavaScript (et TypeScript) offre deux opérateurs de comparaison d’égalité :
+
+| Opérateur | Nom | Comportement |
+|-----------|-----|--------------|
+| `==` | Égalité abstraite | Compare les valeurs **après conversion de type** |
+| `===` | Égalité stricte | Compare les valeurs **et le type** sans conversion |
+
+```ts title="egalite.ts"
+console.log(1 == "1");   // true  ← JavaScript convertit "1" en number
+console.log(1 === "1");  // false ← types différents (number vs string)
+
+console.log(0 == false); // true  ← false est converti en 0
+console.log(0 === false);// false ← types différents (number vs boolean)
+
+console.log(null == undefined);  // true  ← cas spécial de ==
+console.log(null === undefined); // false ← types différents
+```
+
+!!! warning "Toujours utiliser `===` en TypeScript"
+    L’opérateur `==` peut produire des résultats surprenants à cause des conversions implicites. En TypeScript, utilisez toujours `===` (et `!==` pour l’inégalité). TypeScript avec la règle ESLint `eqeqeq` vous avertira si vous utilisez `==`.
+
+!!! manuel
+    [Égalité - MDN](https://developer.mozilla.org/fr/docs/Web/JavaScript/Equality_comparisons_and_sameness)
+
+### Comparaison de tableaux et références en mémoire
+
+Pour les tableaux (et les objets), `===` ne compare **pas les entrées** — il compare la **référence en mémoire**. Deux tableaux avec les mêmes valeurs ne sont pas égaux s'ils sont deux objets distincts en mémoire.
+
+```ts title="tableaux_egalite.ts"
+const a = [1, 2, 3];
+const b = [1, 2, 3];
+
+console.log(a === b); // false ← deux tableaux distincts en mémoire
+console.log(a == b);  // false ← même résultat, même pour ==
+```
+
+De même, copier un tableau avec `=` ne crée **pas une copie** : les deux variables pointent vers le **même tableau en mémoire**. Modifier l'un modifie l'autre.
+
+```ts title="tableaux_reference.ts"
+const original = [1, 2, 3];
+const copie = original; // ← copie la référence, pas les données!
+
+copie.push(4);
+
+console.log(original); // [1, 2, 3, 4] ← original est aussi modifié!
+console.log(copie);    // [1, 2, 3, 4]
+console.log(original === copie); // true ← même référence en mémoire
+```
+
+```mermaid
+graph LR
+    original --> T["[1, 2, 3, 4]"]
+    copie --> T
+```
+
+Pour créer une vraie copie indépendante, il faut utiliser le **spread** `...` ou `Array.from()` :
+
+```ts title="tableaux_copie.ts"
+const original = [1, 2, 3];
+const vraiecopie = [...original]; // ← nouveau tableau en mémoire
+
+vraiecopie.push(4);
+
+console.log(original);  // [1, 2, 3] ← inchangé
+console.log(vraiecopie);// [1, 2, 3, 4]
+console.log(original === vraiecopie); // false ← références différentes
+```
+
+!!! warning "Même comportement pour les objets"
+    Les objets fonctionnent exactement de la même façon. `const b = a` copie la référence. Pour copier un objet, utilisez `{ ...a }` ou `structuredClone(a)` pour une copie profonde.
+
+## Rétrécir le type
 
 Quand nous acceptons plus d’un type pour un argument, il est parfois nécessaire de bien déterminer le type dans le corps de la fonction :  
 

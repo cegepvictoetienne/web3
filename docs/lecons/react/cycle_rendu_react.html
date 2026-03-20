@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cycle de rendu React</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .progress-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid #334155;
+      background: #1e293b;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      transition: all .3s;
+      color: #64748b;
+    }
+    .progress-step.active   .progress-dot { border-color: #61dafb; background: #0ea5e9; color: #fff; box-shadow: 0 0 16px #0ea5e980; }
+    .progress-step.done     .progress-dot { border-color: #22c55e; background: #166534; color: #86efac; }
+    .progress-label {
+      font-size: 10px; color: #64748b; text-align: center; max-width: 72px;
+      transition: color .3s;
+    }
+    .progress-step.active .progress-label { color: #7dd3fc; }
+    .progress-step.done   .progress-label { color: #86efac; }
+
+    .progress-connector {
+      width: 32px; height: 2px;
+      background: #334155;
+      align-self: center; margin-top: -20px;
+      transition: background .4s;
+    }
+    .progress-connector.done { background: #22c55e; }
+
+    /* ── Card ── */
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      width: 100%; max-width: 860px;
+      padding: 32px;
+      min-height: 440px;
+      display: flex; flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #0f172a; border: 1px solid #334155;
+      border-radius: 999px; padding: 4px 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: .5px;
+      color: #94a3b8; margin-bottom: 12px;
+      width: fit-content;
+    }
+    .step-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+
+    /* ── Scene containers ── */
+    .scene { display: none; flex: 1; flex-direction: column; }
+    .scene.active { display: flex; animation: fadeIn .35s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Shared layout helpers ── */
+    .row { display: flex; gap: 16px; flex-wrap: wrap; flex: 1; }
+    .col { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px; }
+    .panel {
+      background: #0f172a; border: 1px solid #1e3a5f;
+      border-radius: 10px; padding: 14px 16px;
+      font-size: 13px; line-height: 1.7;
+    }
+    .panel-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      color: #475569; margin-bottom: 10px; text-transform: uppercase;
+    }
+
+    /* ── Step 1 : Trigger ── */
+    .component-box {
+      background: #0f172a;
+      border: 2px solid #1e40af;
+      border-radius: 12px; padding: 18px;
+      position: relative;
+    }
+    .component-label {
+      font-size: 11px; font-weight: 700; color: #3b82f6;
+      letter-spacing: 1px; margin-bottom: 12px;
+    }
+    .fake-ui { background: #1e293b; border-radius: 8px; padding: 14px; }
+    .fake-score { font-size: 28px; font-weight: 700; color: #f8fafc; margin-bottom: 10px; }
+    .fake-btn {
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 6px;
+      padding: 8px 16px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .fake-btn:hover { background: #1d4ed8; }
+
+    .trigger-arrow {
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 4px;
+      color: #f59e0b; font-size: 13px; font-weight: 600;
+      padding: 8px;
+    }
+    .arrow-anim {
+      font-size: 28px; animation: bounce 1s infinite;
+    }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+    .state-box {
+      background: #0f172a; border: 1px solid #f59e0b44;
+      border-radius: 10px; padding: 14px;
+    }
+    .state-title { font-size: 11px; font-weight: 700; color: #f59e0b; letter-spacing: 1px; margin-bottom: 10px; }
+    .state-line { display: flex; align-items: center; gap: 8px; font-size: 13px; font-family: monospace; }
+    .state-old { color: #ef4444; text-decoration: line-through; opacity: .7; }
+    .state-arrow { color: #64748b; }
+    .state-new { color: #22c55e; font-weight: 700; animation: pulse 1s ease 1; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+    .trigger-types { display: flex; flex-direction: column; gap: 8px; }
+    .trigger-chip {
+      display: flex; align-items: center; gap: 10px;
+      background: #0f172a; border: 1px solid #334155;
+      border-radius: 8px; padding: 10px 14px; font-size: 13px;
+    }
+    .trigger-chip .icon { font-size: 18px; }
+    .trigger-chip.active-chip { border-color: #f59e0b80; background: #1c1407; }
+
+    /* ── Step 2 : Render / Virtual DOM ── */
+    .vdom-compare { display: flex; gap: 12px; flex: 1; }
+    .vdom-tree {
+      flex: 1; background: #0f172a; border-radius: 10px; padding: 14px;
+      border: 1px solid #334155; font-family: monospace; font-size: 12px;
+      line-height: 1.9;
+    }
+    .vdom-tree .tree-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .vdom-tree.old { border-color: #ef444444; }
+    .vdom-tree.old .tree-title { color: #f87171; }
+    .vdom-tree.new { border-color: #22c55e44; }
+    .vdom-tree.new .tree-title { color: #4ade80; }
+    .tree-node { padding-left: 16px; }
+    .tag-open { color: #7dd3fc; }
+    .tag-close { color: #7dd3fc; }
+    .attr { color: #fbbf24; }
+    .text-val { color: #d1fae5; }
+    .changed { background: #14532d; border-radius: 4px; padding: 0 4px; color: #86efac; animation: highlight 1.2s ease; }
+    @keyframes highlight { 0% { background: #166534; } 100% { background: #14532d; } }
+
+    .render-flow {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; font-size: 13px; margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    .flow-item {
+      background: #0f172a; border: 1px solid #334155;
+      border-radius: 8px; padding: 6px 12px;
+      font-size: 12px; color: #94a3b8;
+    }
+    .flow-arrow { color: #475569; font-size: 18px; }
+    .flow-item.highlight { border-color: #0ea5e9; color: #7dd3fc; background: #0c1a2e; }
+
+    /* ── Step 3 : Diff ── */
+    .diff-grid { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .diff-row {
+      display: flex; align-items: stretch; gap: 10px;
+      border-radius: 10px; overflow: hidden; font-size: 13px;
+    }
+    .diff-cell {
+      flex: 1; padding: 10px 14px; font-family: monospace;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .diff-cell.label {
+      flex: 0 0 160px; background: #0f172a;
+      font-family: 'Segoe UI', sans-serif; font-size: 12px;
+      color: #64748b; border-radius: 8px;
+    }
+    .diff-cell.old { background: #1c0a0a; border: 1px solid #7f1d1d; color: #fca5a5; }
+    .diff-cell.new { background: #052e16; border: 1px solid #14532d; color: #86efac; }
+    .diff-cell.same { background: #0f172a; border: 1px solid #1e293b; color: #475569; }
+    .diff-cell.changed-cell { position: relative; }
+    .diff-badge {
+      position: absolute; top: 4px; right: 6px;
+      font-size: 9px; font-weight: 700; padding: 1px 5px;
+      border-radius: 4px; letter-spacing: .5px;
+    }
+    .diff-badge.added   { background: #166534; color: #86efac; }
+    .diff-badge.removed { background: #7f1d1d; color: #fca5a5; }
+    .diff-badge.same    { background: #1e293b; color: #475569; }
+
+    .diff-legend { display: flex; gap: 16px; margin-top: 6px; font-size: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    /* ── Step 4 : Commit ── */
+    .commit-layout { display: flex; gap: 16px; flex: 1; align-items: flex-start; }
+    .dom-tree {
+      flex: 1; background: #0f172a; border-radius: 10px;
+      padding: 14px; border: 1px solid #334155;
+      font-family: monospace; font-size: 12px; line-height: 2;
+    }
+    .dom-tree .tree-title { font-size: 11px; font-weight: 700; color: #a855f7; letter-spacing: 1px; margin-bottom: 10px; }
+    .dom-node { display: flex; align-items: center; gap: 8px; }
+    .dom-node .connector { color: #334155; }
+    .dom-node.updated .node-tag { background: #3b0764; border: 1px solid #7c3aed; border-radius: 4px; padding: 0 6px; color: #d8b4fe; animation: nodeFlash .6s ease 1; }
+    .dom-node .node-tag { padding: 0 6px; color: #7dd3fc; }
+    @keyframes nodeFlash { 0%,100% { background: #3b0764; } 50% { background: #6d28d9; } }
+
+    .commit-steps { display: flex; flex-direction: column; gap: 10px; flex: 0 0 220px; }
+    .commit-step {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #0f172a; border: 1px solid #1e293b;
+      border-radius: 10px; padding: 12px;
+      font-size: 13px; transition: border-color .3s, background .3s;
+    }
+    .commit-step.active { border-color: #7c3aed; background: #150d21; }
+    .commit-step .step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #1e293b; border: 1px solid #334155;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: #64748b; flex-shrink: 0;
+    }
+    .commit-step.active .step-num { background: #6d28d9; border-color: #7c3aed; color: #fff; }
+    .commit-step-text { color: #94a3b8; line-height: 1.5; }
+    .commit-step.active .commit-step-text { color: #e2e8f0; }
+
+    /* ── Step 5 : Summary ── */
+    .summary-flow {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; flex: 1; justify-content: center;
+    }
+    .summary-step {
+      display: flex; align-items: center; gap: 12px;
+      background: #0f172a; border: 2px solid #1e293b;
+      border-radius: 12px; padding: 14px 20px;
+      width: 100%; max-width: 560px;
+      transition: border-color .3s;
+      cursor: pointer;
+    }
+    .summary-step:hover { border-color: #475569; }
+    .summary-step .s-icon { font-size: 22px; }
+    .summary-step .s-content { display: flex; flex-direction: column; gap: 2px; }
+    .summary-step .s-title { font-size: 14px; font-weight: 600; }
+    .summary-step .s-desc { font-size: 12px; color: #64748b; }
+    .summary-connector { color: #334155; font-size: 20px; }
+
+    .summary-step[data-step="1"] { border-color: #f59e0b60; }
+    .summary-step[data-step="1"] .s-title { color: #fbbf24; }
+    .summary-step[data-step="2"] { border-color: #0ea5e960; }
+    .summary-step[data-step="2"] .s-title { color: #38bdf8; }
+    .summary-step[data-step="3"] { border-color: #a855f760; }
+    .summary-step[data-step="3"] .s-title { color: #c084fc; }
+    .summary-step[data-step="4"] { border-color: #22c55e60; }
+    .summary-step[data-step="4"] .s-title { color: #4ade80; }
+
+    /* ── Nav buttons ── */
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; width: 100%; max-width: 860px; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: #1e293b; border: 1px solid #334155;
+      color: #e2e8f0; border-radius: 8px;
+      padding: 10px 20px; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .nav-btn:hover { background: #334155; border-color: #475569; }
+    .nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .nav-btn.primary { background: #0ea5e9; border-color: #0284c7; color: #fff; }
+    .nav-btn.primary:hover { background: #0284c7; }
+
+    .step-counter { font-size: 13px; color: #64748b; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .vdom-compare { flex-direction: column; }
+      .commit-layout { flex-direction: column; }
+      .commit-steps { flex: unset; width: 100%; }
+      .progress-label { display: none; }
+      .progress-connector { width: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar">
+  <div class="progress-step active" data-goto="0" onclick="goTo(0)">
+    <div class="progress-dot">1</div>
+    <div class="progress-label">Déclencheur</div>
+  </div>
+  <div class="progress-connector" id="conn-0"></div>
+  <div class="progress-step" data-goto="1" onclick="goTo(1)">
+    <div class="progress-dot">2</div>
+    <div class="progress-label">Render & Virtual DOM</div>
+  </div>
+  <div class="progress-connector" id="conn-1"></div>
+  <div class="progress-step" data-goto="2" onclick="goTo(2)">
+    <div class="progress-dot">3</div>
+    <div class="progress-label">Diffing</div>
+  </div>
+  <div class="progress-connector" id="conn-2"></div>
+  <div class="progress-step" data-goto="3" onclick="goTo(3)">
+    <div class="progress-dot">4</div>
+    <div class="progress-label">Commit</div>
+  </div>
+  <div class="progress-connector" id="conn-3"></div>
+  <div class="progress-step" data-goto="4" onclick="goTo(4)">
+    <div class="progress-dot">5</div>
+    <div class="progress-label">Résumé</div>
+  </div>
+</div>
+
+<!-- Card -->
+<div class="card">
+
+  <!-- ════════════════════════════════════════
+       Étape 1 — Déclencheur
+  ═════════════════════════════════════════ -->
+  <div class="scene active" id="scene-0">
+    <div class="step-badge">
+      <span class="dot" style="background:#f59e0b"></span>
+      Étape 1 sur 5
+    </div>
+    <h2 style="color:#fbbf24">Déclencheur</h2>
+    <p class="subtitle">Le cycle commence quand quelque chose change : un appel à <code>setState</code>, de nouvelles <code>props</code>, ou une mise à jour de contexte. React planifie alors un re-rendu du composant concerné.</p>
+
+    <div class="row">
+      <!-- Composant fictif -->
+      <div class="col">
+        <div class="component-box">
+          <div class="component-label">COMPOSANT — Compteur.tsx</div>
+          <div class="fake-ui">
+            <div class="fake-score" id="score-display">Score : 0</div>
+            <button class="fake-btn" onclick="triggerDemo()">
+              <span>+1</span>
+            </button>
+          </div>
+        </div>
+        <div class="trigger-arrow">
+          <span class="arrow-anim" id="trigger-anim" style="opacity:0">↓</span>
+          <span id="trigger-label" style="opacity:0">setScore(1) appelé !</span>
+        </div>
+        <div class="state-box" id="state-box">
+          <div class="state-title">État (State)</div>
+          <div class="state-line">
+            <code>score</code>
+            <span class="state-old" id="old-val">0</span>
+            <span class="state-arrow">→</span>
+            <span class="state-new" id="new-val" style="opacity:0">1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Types de déclencheurs -->
+      <div class="col">
+        <div class="panel-title" style="color:#f59e0b">Les 3 déclencheurs de rendu</div>
+        <div class="trigger-types">
+          <div class="trigger-chip active-chip" id="chip-state">
+            <span class="icon"></span>
+            <div>
+              <div style="font-weight:600;color:#fbbf24">setState / useState</div>
+              <div style="font-size:11px;color:#64748b">L'état interne du composant change</div>
+            </div>
+          </div>
+          <div class="trigger-chip">
+            <span class="icon"></span>
+            <div>
+              <div style="font-weight:600;color:#e2e8f0">Nouvelles props</div>
+              <div style="font-size:11px;color:#64748b">Le composant parent se re-rend et transmet de nouvelles valeurs</div>
+            </div>
+          </div>
+          <div class="trigger-chip">
+            <span class="icon"></span>
+            <div>
+              <div style="font-weight:600;color:#e2e8f0">Contexte</div>
+              <div style="font-size:11px;color:#64748b">Un useContext dont la valeur a changé</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:auto; border-color:#f59e0b22">
+          <span style="font-size:12px; color:#94a3b8">React ne modifie <strong style="color:#fbbf24">pas</strong> le DOM immédiatement. Il <em>planifie</em> un rendu, qui sera exécuté lors du prochain cycle.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       Étape 2 — Render & Virtual DOM
+  ═════════════════════════════════════════ -->
+  <div class="scene" id="scene-1">
+    <div class="step-badge">
+      <span class="dot" style="background:#0ea5e9"></span>
+      Étape 2 sur 5
+    </div>
+    <h2 style="color:#38bdf8">Render & Virtual DOM</h2>
+    <p class="subtitle">React appelle la fonction du composant pour obtenir le JSX. Ce JSX est transformé en une représentation légère en mémoire : le <strong>Virtual DOM</strong>. Le vrai DOM n'est <em>pas encore</em> touché.</p>
+
+    <div class="render-flow">
+      <div class="flow-item highlight">Compteur()</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item highlight">JSX retourné</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item highlight">React.createElement(…)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item highlight">Virtual DOM (en mémoire)</div>
+    </div>
+
+    <div class="vdom-compare">
+      <div class="vdom-tree old">
+        <div class="tree-title">ANCIEN Virtual DOM</div>
+        <div>(score = 0)</div>
+        <br/>
+        <div><span class="tag-open">&lt;div&gt;</span></div>
+        <div class="tree-node"><span class="tag-open">&lt;p&gt;</span><span class="text-val">Score : 0</span><span class="tag-close">&lt;/p&gt;</span></div>
+        <div class="tree-node">
+          <span class="tag-open">&lt;button</span>
+          <span class="attr"> onClick</span>
+          <span class="tag-open">&gt;</span>
+          <span class="text-val">+1</span>
+          <span class="tag-close">&lt;/button&gt;</span>
+        </div>
+        <div><span class="tag-close">&lt;/div&gt;</span></div>
+      </div>
+
+      <div style="display:flex;align-items:center;font-size:24px;color:#475569;padding: 0 4px;">⟹</div>
+
+      <div class="vdom-tree new">
+        <div class="tree-title">NOUVEAU Virtual DOM</div>
+        <div>(score = 1)</div>
+        <br/>
+        <div><span class="tag-open">&lt;div&gt;</span></div>
+        <div class="tree-node"><span class="tag-open">&lt;p&gt;</span><span class="text-val changed">Score : 1</span><span class="tag-close">&lt;/p&gt;</span></div>
+        <div class="tree-node">
+          <span class="tag-open">&lt;button</span>
+          <span class="attr"> onClick</span>
+          <span class="tag-open">&gt;</span>
+          <span class="text-val">+1</span>
+          <span class="tag-close">&lt;/button&gt;</span>
+        </div>
+        <div><span class="tag-close">&lt;/div&gt;</span></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:12px; border-color:#0ea5e922">
+      <span style="font-size:12px; color:#94a3b8">« Rendre » un composant = <strong style="color:#38bdf8">appeler sa fonction</strong>. Cela ne modifie pas le vrai DOM. Si le JSX retourné est identique à l'ancien, React ne changera rien.</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       Étape 3 — Diffing
+  ═════════════════════════════════════════ -->
+  <div class="scene" id="scene-2">
+    <div class="step-badge">
+      <span class="dot" style="background:#a855f7"></span>
+      Étape 3 sur 5
+    </div>
+    <h2 style="color:#c084fc">Réconciliation & Diffing</h2>
+    <p class="subtitle">React compare le nouveau Virtual DOM avec l'ancien pour identifier <strong>uniquement les nœuds qui ont réellement changé</strong>. C'est l'algorithme de <em>diffing</em>. Seules les différences seront transmises au DOM réel.</p>
+
+    <div class="diff-grid">
+      <!-- Header -->
+      <div class="diff-row" style="font-size:11px;font-weight:700;color:#475569;letter-spacing:1px;text-transform:uppercase;">
+        <div class="diff-cell label">Nœud</div>
+        <div class="diff-cell" style="flex:1;background:transparent;border:none;color:#f87171">Avant</div>
+        <div class="diff-cell" style="flex:1;background:transparent;border:none;color:#4ade80">Après</div>
+        <div class="diff-cell" style="flex:0 0 80px;background:transparent;border:none;text-align:center">Action</div>
+      </div>
+
+      <div class="diff-row">
+        <div class="diff-cell label">&lt;div&gt; racine</div>
+        <div class="diff-cell same"><code>&lt;div&gt;</code></div>
+        <div class="diff-cell same"><code>&lt;div&gt;</code></div>
+        <div class="diff-cell same" style="flex:0 0 80px;justify-content:center"><span class="diff-badge same">SKIP</span></div>
+      </div>
+
+      <div class="diff-row">
+        <div class="diff-cell label">&lt;p&gt; texte</div>
+        <div class="diff-cell old changed-cell"><code>"Score : 0"</code><span class="diff-badge removed">AVANT</span></div>
+        <div class="diff-cell new changed-cell"><code>"Score : 1"</code><span class="diff-badge added">APRÈS</span></div>
+        <div class="diff-cell" style="flex:0 0 80px;justify-content:center;background:#0c1f12;border:1px solid #14532d;border-radius:8px;color:#4ade80;font-size:11px;font-weight:700">UPDATE</div>
+      </div>
+
+      <div class="diff-row">
+        <div class="diff-cell label">&lt;button&gt;</div>
+        <div class="diff-cell same"><code>onClick, "+1"</code></div>
+        <div class="diff-cell same"><code>onClick, "+1"</code></div>
+        <div class="diff-cell same" style="flex:0 0 80px;justify-content:center"><span class="diff-badge same">SKIP</span></div>
+      </div>
+    </div>
+
+    <div class="diff-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#14532d"></div><span style="color:#4ade80">UPDATE — nœud modifié, sera appliqué au DOM</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1e293b"></div><span style="color:#475569">SKIP — nœud identique, ignoré</span></div>
+    </div>
+
+    <div class="panel" style="margin-top:10px; border-color:#a855f722">
+      <span style="font-size:12px; color:#94a3b8">Sur 3 nœuds comparés, <strong style="color:#c084fc">1 seul changement</strong> est détecté. Seul ce nœud sera mis à jour dans le vrai DOM — c'est ce qui rend React performant.</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       Étape 4 — Commit
+  ═════════════════════════════════════════ -->
+  <div class="scene" id="scene-3">
+    <div class="step-badge">
+      <span class="dot" style="background:#22c55e"></span>
+      Étape 4 sur 5
+    </div>
+    <h2 style="color:#4ade80">Commit au DOM réel</h2>
+    <p class="subtitle">React applique <strong>uniquement les différences identifiées</strong> au vrai DOM du navigateur. C'est la seule étape qui touche réellement le DOM. Les <code>useEffect</code> sont exécutés après cette phase.</p>
+
+    <div class="commit-layout">
+      <div class="dom-tree">
+        <div class="tree-title">VRAI DOM (navigateur)</div>
+        <div class="dom-node">
+          <span class="connector">└─</span>
+          <span class="node-tag">&lt;div&gt;</span>
+        </div>
+        <div class="dom-node" style="padding-left:24px" id="commit-p">
+          <span class="connector">├─</span>
+          <span class="node-tag">&lt;p&gt;</span>
+          <span style="color:#94a3b8;font-size:12px" id="commit-text">"Score : 0"</span>
+        </div>
+        <div class="dom-node" style="padding-left:24px">
+          <span class="connector">└─</span>
+          <span class="node-tag">&lt;button&gt;</span>
+          <span style="color:#475569;font-size:12px">"+1"</span>
+        </div>
+      </div>
+
+      <div class="commit-steps">
+        <div class="commit-step" id="cs1">
+          <div class="step-num">1</div>
+          <div class="commit-step-text">React prépare la liste des mutations à effectuer</div>
+        </div>
+        <div class="commit-step" id="cs2">
+          <div class="step-num">2</div>
+          <div class="commit-step-text">Le nœud <code>&lt;p&gt;</code> est ciblé dans le vrai DOM</div>
+        </div>
+        <div class="commit-step" id="cs3">
+          <div class="step-num">3</div>
+          <div class="commit-step-text"><code>textContent</code> est mis à jour : <br/>"Score : 0" → <strong style="color:#4ade80">"Score : 1"</strong></div>
+        </div>
+        <div class="commit-step" id="cs4">
+          <div class="step-num">4</div>
+          <div class="commit-step-text">Les <code>useEffect</code> sont déclenchés après la mise à jour du DOM</div>
+        </div>
+        <button class="fake-btn" style="margin-top:8px;width:100%;justify-content:center" onclick="playCommit()">Rejouer l'animation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       Étape 5 — Résumé
+  ═════════════════════════════════════════ -->
+  <div class="scene" id="scene-4">
+    <div class="step-badge">
+      <span class="dot" style="background:#6366f1"></span>
+      Étape 5 sur 5
+    </div>
+    <h2 style="color:#818cf8">Résumé du cycle complet</h2>
+    <p class="subtitle">Voici le cycle complet de rendu React. Cliquez sur une étape pour y retourner.</p>
+
+    <div class="summary-flow">
+      <div class="summary-step" data-step="1" onclick="goTo(0)">
+        <span class="s-icon"></span>
+        <div class="s-content">
+          <span class="s-title">1. Déclencheur</span>
+          <span class="s-desc">setState, nouvelles props, ou mise à jour de contexte planifient un re-rendu</span>
+        </div>
+      </div>
+      <div class="summary-connector">↓</div>
+      <div class="summary-step" data-step="2" onclick="goTo(1)">
+        <span class="s-icon"></span>
+        <div class="s-content">
+          <span class="s-title">2. Render & Virtual DOM</span>
+          <span class="s-desc">La fonction du composant est appelée, produit un nouveau Virtual DOM en mémoire</span>
+        </div>
+      </div>
+      <div class="summary-connector">↓</div>
+      <div class="summary-step" data-step="3" onclick="goTo(2)">
+        <span class="s-icon"></span>
+        <div class="s-content">
+          <span class="s-title">3. Diffing & Réconciliation</span>
+          <span class="s-desc">React compare les deux Virtual DOM et identifie les différences minimales</span>
+        </div>
+      </div>
+      <div class="summary-connector">↓</div>
+      <div class="summary-step" data-step="4" onclick="goTo(3)">
+        <span class="s-icon"></span>
+        <div class="s-content">
+          <span class="s-title">4. Commit</span>
+          <span class="s-desc">Seules les différences sont appliquées au vrai DOM — puis les useEffect s'exécutent</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /card -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Précédent</button>
+  <span class="step-counter" id="step-counter">Étape 1 / 5</span>
+  <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Suivant →</button>
+</div>
+
+<script>
+  let current = 0;
+  const TOTAL = 5;
+
+  function goTo(index) {
+    // Hide current
+    document.getElementById('scene-' + current).classList.remove('active');
+    // Update progress dots
+    const steps = document.querySelectorAll('.progress-step');
+    steps[current].classList.remove('active');
+    if (index > current) steps[current].classList.add('done');
+    else steps[current].classList.remove('done');
+
+    current = index;
+
+    // Show new
+    document.getElementById('scene-' + current).classList.add('active');
+    steps[current].classList.add('active');
+    steps[current].classList.remove('done');
+
+    // Update connectors
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('conn-' + i).classList.toggle('done', i < current);
+    }
+
+    // Mark previous steps done
+    for (let i = 0; i < current; i++) steps[i].classList.add('done');
+    for (let i = current + 1; i < TOTAL; i++) steps[i].classList.remove('done');
+
+    // Update nav buttons
+    document.getElementById('btn-prev').disabled = (current === 0);
+    document.getElementById('btn-next').disabled = (current === TOTAL - 1);
+    document.getElementById('btn-next').textContent = current === TOTAL - 2 ? 'Résumé →' : 'Suivant →';
+    document.getElementById('step-counter').textContent = 'Étape ' + (current + 1) + ' / ' + TOTAL;
+
+    // Trigger auto-animations per step
+    if (current === 3) setTimeout(playCommit, 400);
+  }
+
+  function navigate(dir) { goTo(Math.max(0, Math.min(TOTAL - 1, current + dir))); }
+
+  /* ── Step 1 demo ── */
+  let demoScore = 0;
+  function triggerDemo() {
+    demoScore++;
+    document.getElementById('score-display').textContent = 'Score : ' + demoScore;
+    document.getElementById('old-val').textContent = demoScore - 1;
+    document.getElementById('new-val').textContent = demoScore;
+
+    const anim = document.getElementById('trigger-anim');
+    const label = document.getElementById('trigger-label');
+    anim.style.opacity = '1'; label.style.opacity = '1';
+    label.textContent = 'setScore(' + demoScore + ') appelé !';
+
+    // Refresh animation
+    document.getElementById('new-val').style.animation = 'none';
+    requestAnimationFrame(() => {
+      document.getElementById('new-val').style.opacity = '1';
+      document.getElementById('new-val').style.animation = 'pulse 1s ease 1';
+    });
+  }
+
+  /* ── Step 4 commit animation ── */
+  function playCommit() {
+    const steps = ['cs1','cs2','cs3','cs4'];
+    const p = document.getElementById('commit-p');
+    const txt = document.getElementById('commit-text');
+
+    // Reset
+    steps.forEach(id => document.getElementById(id).classList.remove('active'));
+    p.classList.remove('updated');
+    txt.textContent = '"Score : 0"';
+    txt.style.color = '#94a3b8';
+
+    steps.forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add('active');
+        if (i === 2) {
+          p.classList.add('updated');
+          txt.textContent = '"Score : 1"';
+          txt.style.color = '#4ade80';
+        }
+      }, i * 700);
+    });
+  }
+</script>
+</body>
+</html>
