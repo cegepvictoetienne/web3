@@ -1,4 +1,4 @@
-# Horaire du cours de développement web 3
+# Horaire
 Cours|Date|Sujet|Exercice
 --|--|--|--
 1|2025-08-21 13:15:00|[Introduction à TypeScript](lecons/typescript/introduction_typescript.md) <br/> [npm](lecons/typescript/npm.md) <br/>[Prettier](lecons/typescript/prettier.md)  |[lodash](exercices/lodash.md)

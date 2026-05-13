@@ -25,13 +25,13 @@ Chaque fichier `route.ts` peut exporter des fonctions nommées selon la méthode
 ### GET et POST
 
 ``` ts title="app/api/produits/route.ts"
-{!next-prisma/app/api/produits/route.ts!}
+--8<-- "next-prisma/app/api/produits/route.ts"
 ```
 
 ### GET, PUT et DELETE avec paramètre dynamique
 
 ``` ts title="app/api/produits/[id]/route.ts"
-{!next-prisma/app/api/produits/[id]/route.ts!}
+--8<-- "next-prisma/app/api/produits/[id]/route.ts"
 ```
 
 ## Tester les routes API

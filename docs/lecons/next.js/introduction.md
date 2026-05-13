@@ -90,7 +90,7 @@ mon-projet/
 Le fichier `layout.tsx` est le gabarit principal de l'application. Il enveloppe toutes les pages et contient la structure HTML de base (`&lt;html&gt;` et `&lt;body&gt;`).
 
 ``` ts title="app/layout.tsx"
-{!next-intro/app/layout.tsx!}
+--8<-- "next-intro/app/layout.tsx"
 ```
 
 Points importants :
@@ -104,7 +104,7 @@ Points importants :
 Le fichier `page.tsx` à la racine du dossier `app/` correspond à la route `/` (page d'accueil).
 
 ``` ts title="app/page.tsx"
-{!next-intro/app/page.tsx!}
+--8<-- "next-intro/app/page.tsx"
 ```
 
 ### next.config.ts - La configuration
@@ -112,7 +112,7 @@ Le fichier `page.tsx` à la racine du dossier `app/` correspond à la route `/` 
 Le fichier `next.config.ts` permet de personnaliser le comportement de Next.js :
 
 ``` ts title="next.config.ts"
-{!next-intro/next.config.ts!}
+--8<-- "next-intro/next.config.ts"
 ```
 
 ## Les métadonnées

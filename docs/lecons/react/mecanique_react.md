@@ -38,7 +38,7 @@ Un composant React se **rend** (render) lorsque :
 
 ### Animation interactive — le cycle complet
 
-<iframe src="../cycle_rendu_react.html" style="width:100%;height:800px;border:none;border-radius:12px;"></iframe>
+<iframe src="./cycle_rendu_react.html" style="width:100%;height:800px;border:none;border-radius:12px;"></iframe>
 
 ### Les 4 phases du rendu
 

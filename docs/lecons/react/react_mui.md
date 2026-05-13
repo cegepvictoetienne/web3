@@ -16,7 +16,7 @@ npm install @mui/icons-material
 ## Utiliser Material UI  
 
 ``` ts title="Personnage.tsx"
-{!personnage_MUI/src/components/Personnage/Personnage.tsx!}
+--8<-- "personnage_MUI/src/components/Personnage/Personnage.tsx"
 ```  
 
 ## Thèmes dans Material UI  
@@ -30,7 +30,7 @@ La manière la plus efficace pour changer l'apparence de votre application avec 
 La place idéale pour ajouter un thème à votre application est `App.tsx` :  
 
 ``` ts title="app.tsx"
-{!personnage_MUI/src/components/App/App.tsx!}
+--8<-- "personnage_MUI/src/components/App/App.tsx"
 ```
 
 Vous pouvez aussi assigner une apparence spécifiquement à un type de composant comme suit :  

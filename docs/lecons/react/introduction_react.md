@@ -72,7 +72,7 @@ Voici comment générer l’application :
 !!! manuel
     [Documentation officielle Vite](https://vitejs.dev/guide/)
 
-# React Developer Tools
+## React Developer Tools
 
 React Developer Tools est un plugiciel dans Chrome pour aider au débogage de vos applications React.
 
@@ -83,20 +83,20 @@ Pour l'installer : [React Developer Tools pour Chrome](https://chrome.google.com
   <figcaption>React Development Tools s'installe dans les outils de développement de Chrome</figcaption>
 </figure>
 
-# Programmer React avec des fonctions
+## Programmer React avec des fonctions
 
 Utiliser des fonctions au lieu des classes en React est la manière officielle de programmer dans cet environnement.
 
 ```ts title="Personnage.tsx"
-{!personnage_base/src/components/Personnage/Personnage.tsx!}
+--8<-- "personnage_base/src/components/Personnage/Personnage.tsx"
 ```
 
 ```ts title="Personnage.css"
-{!personnage_base/src/components/Personnage/Personnage.css!}
+--8<-- "personnage_base/src/components/Personnage/Personnage.css"
 ```
 
 ```ts title="app.tsx"
-{!personnage_base/src/components/App/App.tsx!}
+--8<-- "personnage_base/src/components/App/App.tsx"
 ```
 
 <figure markdown>
@@ -107,18 +107,18 @@ Utiliser des fonctions au lieu des classes en React est la manière officielle d
 !!! manuel
     [Learn React](https://react.dev/learn)
 
-# Passage de paramètres avec les props
+## Passage de paramètres avec les props
 
 1. Définir la liste des paramètres dans une interface
 2. L’ajouter comme props à la fonction de la composante
 3. Utiliser les paramètres lors de l’instanciation de la composante
 
 ```ts title="Personnage.tsx"
-{!personnage_base_props/src/components/Personnage/Personnage.tsx!}
+--8<-- "personnage_base_props/src/components/Personnage/Personnage.tsx"
 ```
 
 ```ts title="app.tsx"
-{!personnage_base_props/src/components/App/App.tsx!}
+--8<-- "personnage_base_props/src/components/App/App.tsx"
 ```
 
 <figure markdown>
@@ -129,35 +129,3 @@ Utiliser des fonctions au lieu des classes en React est la manière officielle d
 !!! manuel
     [Props](https://react.dev/learn/passing-props-to-a-component)
 
-# Les hooks - useState
-
-- Conserve l’état d’une variable
-- Réagit lorsque la valeur change
-
-```ts title="App.tsx"
-{!personnage_base_useState/src/components/App/App.tsx!}
-```
-
-<figure markdown>
-  ![react-personnage-base-usestate](images/react-personnage-base-usestate.png){ width="600" }
-  <figcaption>Affichage du projet personnage - base avec useState</figcaption>
-</figure>
-
-!!! manuel
-    [useState](https://react.dev/reference/react/useState)
-
-# Hooks : useEffect
-
-Faire des traitements de données seulement lors d’événements précis, comme le premier render ou lors de changement d’une autre variable.
-
-```ts title="app.tsx"
-{!personnage_base_useEffect/src/components/App/App.tsx!}
-```
-
-<figure markdown>
-  ![react-personnage-base-useeffect](images/react-personnage-base-useeffect.png){ width="600" }
-  <figcaption>Affichage du projet personnage - base avec useEffect</figcaption>
-</figure>
-
-!!! manuel
-    [useEffect](https://react.dev/reference/react/useEffect)

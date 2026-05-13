@@ -145,16 +145,22 @@ async function myFetch() {
 
 ## Exécution de code synchrone  
 
-![type:video](./videos/no-async.mp4)  
+<video controls style="height:400px;min-width:800px">
+  <source src="./videos/no-async.mp4" type="video/mp4">
+</video>
 
 ## Exécution de code avec promesse    
 
-![type:video](./videos/async-callback.mp4)  
+<video controls style="height:400px;min-width:800px">
+  <source src="./videos/async-callback.mp4" type="video/mp4">
+</video>
 
 
 ## Exécution de code avec setTimeout    
 
-![type:video](./videos/async-setTimeout.mp4)  
+<video controls style="height:400px;min-width:800px">
+  <source src="./videos/async-setTimeout.mp4" type="video/mp4">
+</video>
 
 # Ordre traitement des appels asynchrones  
 
@@ -178,4 +184,6 @@ console.log('5 - Fin du script');
 
 ## Solution    
 
-![type:video](./videos/async-complex.mp4)  
+<video controls style="height:400px;min-width:800px">
+  <source src="./videos/async-complex.mp4" type="video/mp4">
+</video>

@@ -47,19 +47,19 @@ ProduitTableFiltrable
 Commencez pas le composant de produit le plus bas de la hiérarchie, `ProduitRangee`. Ce composant reçoit des données sous forme de `props` et les affiche.
 
 ``` ts title="ProduitRangee.tsx"
-{!penser_react_static/src/components/ProduitRangee.tsx!}
+--8<-- "penser_react_static/src/components/ProduitRangee.tsx"
 ```
 
 Ensuite, construisez le composant `ProduitCategorieRangee` qui reçoit la catégorie sous forme de `props` et les affiche.
 
 ``` ts title="ProduitCategorieRangee.tsx"
-{!penser_react_static/src/components/ProduitCategorieRangee.tsx!}
+--8<-- "penser_react_static/src/components/ProduitCategorieRangee.tsx"
 ```
 
 Enfin, construisez le composant `ProduitTable` qui reçoit les données sous forme de `props` et les affiche.
 
 ``` ts title="ProduitTable.tsx"
-{!penser_react_static/src/components/ProduitTable.tsx!}
+--8<-- "penser_react_static/src/components/ProduitTable.tsx"
 ```
 
 ## Étape 3 : Identifier l'état minimal de l'application
@@ -98,7 +98,7 @@ Dans notre cas, le texte de recherche et l'état de la case à cocher seront uti
 
 
 ``` ts title="ProduitTableFiltrable.tsx"
-{!penser_react_final/src/components/ProduitTableFiltrable.tsx!}
+--8<-- "penser_react_final/src/components/ProduitTableFiltrable.tsx"
 ```
 
 ## Étape 5 : Ajouter des interactions
@@ -111,9 +111,9 @@ Maintenant que l'état est levé au composant parent commun, nous pouvons ajoute
 Ajoutez une fonction de rappel pour gérer le changement de texte de recherche et de la case à cocher dans `BarreRecherche`.
 
 ``` ts title="BarreRecherche.tsx"
-{!penser_react_final/src/components/BarreRecherche.tsx!}
+--8<-- "penser_react_final/src/components/BarreRecherche.tsx"
 ```
 
 ``` ts title="ProduitTable.tsx"
-{!penser_react_final/src/components/ProduitTable.tsx!}
+--8<-- "penser_react_final/src/components/ProduitTable.tsx"
 ```

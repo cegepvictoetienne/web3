@@ -34,11 +34,11 @@ Next.js reconnaît plusieurs fichiers spéciaux dans chaque dossier de route :
 Fichier obligatoire pour qu'une route soit accessible. Il exporte le composant qui sera affiché :
 
 ``` ts title="app/page.tsx"
-{!next-routage/app/page.tsx!}
+--8<-- "next-routage/app/page.tsx"
 ```
 
 ``` ts title="app/a-propos/page.tsx"
-{!next-routage/app/a-propos/page.tsx!}
+--8<-- "next-routage/app/a-propos/page.tsx"
 ```
 
 ### layout.tsx
@@ -46,7 +46,7 @@ Fichier obligatoire pour qu'une route soit accessible. Il exporte le composant q
 Le layout enveloppe les pages enfants. Il est idéal pour les éléments de navigation partagés :
 
 ``` ts title="app/layout.tsx"
-{!next-routage/app/layout.tsx!}
+--8<-- "next-routage/app/layout.tsx"
 ```
 
 Le composant `{children}` sera remplacé par le contenu de la page active. Ceci est similaire au concept de `&lt;Outlet /&gt;` dans React Router.
@@ -56,7 +56,7 @@ Le composant `{children}` sera remplacé par le contenu de la page active. Ceci 
 Affiche un indicateur de chargement pendant que la page se charge :
 
 ``` ts title="app/produits/loading.tsx"
-{!next-routage/app/produits/loading.tsx!}
+--8<-- "next-routage/app/produits/loading.tsx"
 ```
 
 ### error.tsx
@@ -64,7 +64,7 @@ Affiche un indicateur de chargement pendant que la page se charge :
 Gère les erreurs dans un segment de route. Ce fichier doit obligatoirement être un **Client Component** (`"use client"`) :
 
 ``` ts title="app/produits/error.tsx"
-{!next-routage/app/produits/error.tsx!}
+--8<-- "next-routage/app/produits/error.tsx"
 ```
 
 ## Routes dynamiques avec [parametre]
@@ -72,7 +72,7 @@ Gère les erreurs dans un segment de route. Ce fichier doit obligatoirement êtr
 Pour créer une route dynamique, on utilise un nom de dossier entre crochets. Par exemple, `app/produits/[id]/page.tsx` accepte n'importe quelle valeur pour `id`.
 
 ``` ts title="app/produits/[id]/page.tsx"
-{!next-routage/app/produits/[id]/page.tsx!}
+--8<-- "next-routage/app/produits/[id]/page.tsx"
 ```
 
 Le paramètre est accessible via la propriété `params` du composant. Dans Next.js 15+, `params` est une Promise qu'il faut attendre avec `await`.
@@ -82,7 +82,7 @@ Le paramètre est accessible via la propriété `params` du composant. Dans Next
 Pour naviguer entre les pages, utilisez le composant `&lt;Link&gt;` de Next.js plutôt que des balises `&lt;a&gt;` classiques. Le composant `&lt;Link&gt;` effectue une **navigation côté client** sans recharger la page complète.
 
 ``` ts title="app/produits/page.tsx"
-{!next-routage/app/produits/page.tsx!}
+--8<-- "next-routage/app/produits/page.tsx"
 ```
 
 !!! manuel

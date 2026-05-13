@@ -151,5 +151,5 @@ TailwindCSS est un framework CSS utilitaire qui permet de concevoir des interfac
 
 
 ``` ts title="Personnage.tsx"
-{!personnage_tw/src/components/Personnage/Personnage.tsx!}
+--8<-- "personnage_tw/src/components/Personnage/Personnage.tsx"
 ```

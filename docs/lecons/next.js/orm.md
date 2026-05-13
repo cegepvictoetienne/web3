@@ -47,7 +47,7 @@ DATABASE_URL="mysql://utilisateur:motdepasse@localhost:3306/nom_de_la_bd"
 Le fichier `schema.prisma` est le coeur de Prisma. Il définit la structure de votre base de données.
 
 ``` prisma title="prisma/schema.prisma"
-{!next-prisma/prisma/schema.prisma!}
+--8<-- "next-prisma/prisma/schema.prisma"
 ```
 
 ### Types de données courants
@@ -112,7 +112,7 @@ Le Prisma Client est l'objet qui permet d'effectuer des opérations sur la base 
 Dans un projet Next.js, il est important de créer une instance unique de Prisma Client pour éviter les problèmes de connexion en développement :
 
 ``` ts title="lib/prisma.ts"
-{!next-prisma/lib/prisma.ts!}
+--8<-- "next-prisma/lib/prisma.ts"
 ```
 
 ### Opérations CRUD
@@ -186,7 +186,7 @@ Le seeding permet d'insérer des données initiales dans la base de données, ut
 ### Créer le fichier de seed
 
 ``` ts title="prisma/seed.ts"
-{!next-prisma/prisma/seed.ts!}
+--8<-- "next-prisma/prisma/seed.ts"
 ```
 
 ### Configurer le script de seed

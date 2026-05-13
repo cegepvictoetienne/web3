@@ -40,21 +40,21 @@ Tous les éléments sous __ContextePanier__ peuvent accèder au contenu et le mo
 Voici les éléments pertinents pour l'utilisation de contexte :  
 
 ``` ts title="panier.context.tsx"
-{!chapeaux/src/contexts/panier.context.tsx!}
+--8<-- "chapeaux/src/contexts/panier.context.tsx"
 
 ```
 
 ``` ts title="App.tsx"
-{!chapeaux/src/App.tsx!}
+--8<-- "chapeaux/src/App.tsx"
 ```
 
 ``` ts title="panier.component.tsx"
-{!chapeaux/src/components/panier.component.tsx!}
+--8<-- "chapeaux/src/components/panier.component.tsx"
 
 ```
 
 ``` ts title="fiche.component.tsx"
-{!chapeaux/src/components/fiche.component.tsx!}
+--8<-- "chapeaux/src/components/fiche.component.tsx"
 ```
 
 ## Se connecter à un API  

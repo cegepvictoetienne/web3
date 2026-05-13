@@ -16,7 +16,7 @@ npm i @types/react-router-dom --save-dev
 # Exemple de SPA avec Router  
 
 ``` ts title="App.tsx"
-{!monrouteur/src/App.tsx!}
+--8<-- "monrouteur/src/App.tsx"
 ```
 # Différents éléments du projet monrouteur  
 

@@ -152,7 +152,7 @@ Les objets peuvent être typés comme les variables :
 Si nous voulons créer plusieurs objets avec la même forme, créer un type peut aider :  
 
 ``` ts title="chat.ts"
-{!intro_typescript/chat.ts!}
+--8<-- "intro_typescript/chat.ts"
 ```  
 
 On s’assure que tous les objets ont les mêmes attributs.  
@@ -201,17 +201,17 @@ Voici les résultats, selon la version de JavaScript :
 
 ## TypeScript
 ``` ts title="chat.ts"
-{!intro_typescript/chat.ts!}
+--8<-- "intro_typescript/chat.ts"
 ```
 
 ## JavaScript ES6
 ``` ts title="chat.js"
-{!intro_typescript/chat_ES6.js!}
+--8<-- "intro_typescript/chat_ES6.js"
 ```
 
 ## JavaScript ES2022
 ``` ts title="chat.js"
-{!intro_typescript/chat_ES2022.js!}
+--8<-- "intro_typescript/chat_ES2022.js"
 ```
 
 ## Configuration de tsc – tsconfig.json

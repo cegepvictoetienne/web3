@@ -51,7 +51,7 @@ Les Client Components s'exécutent dans le navigateur. Ils sont nécessaires pou
 Pour déclarer un Client Component, ajoutez la directive `"use client"` au début du fichier :
 
 ``` ts title="app/produits/compteur.tsx"
-{!next-routage/app/produits/compteur.tsx!}
+--8<-- "next-routage/app/produits/compteur.tsx"
 ```
 
 ## Quand utiliser l'un ou l'autre

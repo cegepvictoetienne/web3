@@ -12,7 +12,7 @@ Les Server Actions sont des fonctions asynchrones qui s'exécutent **sur le serv
 Pour déclarer une Server Action, ajoutez la directive `"use server"` au début du fichier :
 
 ``` ts title="app/actions/produit.actions.ts"
-{!next-prisma/app/actions/produit.actions.ts!}
+--8<-- "next-prisma/app/actions/produit.actions.ts"
 ```
 
 Points importants :
@@ -26,7 +26,7 @@ Points importants :
 Les Server Actions peuvent être utilisées directement dans l'attribut `action` d'un formulaire HTML :
 
 ``` ts title="app/produits/nouveau/page.tsx"
-{!next-prisma/app/produits/nouveau/page.tsx!}
+--8<-- "next-prisma/app/produits/nouveau/page.tsx"
 ```
 
 Lorsque le formulaire est soumis, la fonction `creerProduit` est appelée sur le serveur avec les données du formulaire sous forme de `FormData`.
@@ -36,7 +36,7 @@ Lorsque le formulaire est soumis, la fonction `creerProduit` est appelée sur le
 Pour passer des arguments supplémentaires à une Server Action (comme un ID), utilisez `.bind()` :
 
 ``` ts title="app/produits/page.tsx"
-{!next-prisma/app/produits/page.tsx!}
+--8<-- "next-prisma/app/produits/page.tsx"
 ```
 
 Dans cet exemple, `supprimerProduit.bind(null, produit.id)` crée une nouvelle fonction qui appellera `supprimerProduit` avec l'ID du produit en premier argument.

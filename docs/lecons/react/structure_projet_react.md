@@ -3,7 +3,7 @@
 ## Structure   
 
 ``` 
-{!personnage_base/folder_structure.txt!}
+--8<-- "personnage_base/folder_structure.txt"
 ``` 
 
 ## Les dossiers  
@@ -21,7 +21,7 @@
 Index.html est le point d'entrée du site Web.  
 
 ``` html title="index.html"
-{!personnage_base/index.html!}
+--8<-- "personnage_base/index.html"
 ``` 
 
 ## Le contenant principal  - main.tsx  
@@ -30,7 +30,7 @@ Index.html est le point d'entrée du site Web.
 main.tsx contient l'application React.  
 
 ``` ts title="/src/main.tsx"
-{!personnage_base/src/main.tsx!}
+--8<-- "personnage_base/src/main.tsx"
 ``` 
 
 ## La composante principale - App.tsx  
@@ -39,19 +39,19 @@ main.tsx contient l'application React.
 App.tsx est l'application React.  C'est ici que l'on modifie le code pour faire notre application.  
 
 ``` ts title="/src/components/App/App.tsx"
-{!personnage_base/src/components/App/App.tsx!}
+--8<-- "personnage_base/src/components/App/App.tsx"
 ``` 
 
 Dans la structure utilisée pour le cours, chaque composante est dans son propre dossier.  Pour faciliter l'importation des composantes, un fichier `index.ts` est créé, pour exporter la composante.  
 
 ``` ts title="/src/components/App/index.ts"
-{!personnage_base/src/components/App/index.ts!}
+--8<-- "personnage_base/src/components/App/index.ts"
 ``` 
 
 Le CSS spécifique à une composante peut résider dans le dossier de la composante :  
 
 ``` css title="/src/components/App/App.css"
-{!personnage_base/src/components/App/App.css!}
+--8<-- "personnage_base/src/components/App/App.css"
 ``` 
 
 ## Une composante spécifique à votre projet   
@@ -60,15 +60,15 @@ Le CSS spécifique à une composante peut résider dans le dossier de la composa
 Personnage.tsx est une composante spécifique à votre application React. 
 
 ``` ts title="/src/components/Personnage/Personnage.tsx"
-{!personnage_base/src/components/Personnage/Personnage.tsx!}
+--8<-- "personnage_base/src/components/Personnage/Personnage.tsx"
 ```
 
 ``` ts title="/src/components/Personnage/index.ts"
-{!personnage_base/src/components/Personnage/index.ts!}
+--8<-- "personnage_base/src/components/Personnage/index.ts"
 ``` 
 
 Le CSS spécifique à une composante peut résider dans le dossier de la composante :  
 
 ``` css title="/src/components/Personnage/Personnage.css"
-{!personnage_base/src/components/Personnage/Personnage.css!}
+--8<-- "personnage_base/src/components/Personnage/Personnage.css"
 ``` 
