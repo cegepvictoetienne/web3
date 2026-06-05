@@ -67,7 +67,7 @@ Gère les erreurs dans un segment de route. Ce fichier doit obligatoirement êtr
 --8<-- "next-routage/app/produits/error.tsx"
 ```
 
-## Routes dynamiques avec [parametre]
+## Routes dynamiques avec \[parametre\]
 
 Pour créer une route dynamique, on utilise un nom de dossier entre crochets. Par exemple, `app/produits/[id]/page.tsx` accepte n'importe quelle valeur pour `id`.
 

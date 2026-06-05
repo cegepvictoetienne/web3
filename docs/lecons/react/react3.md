@@ -121,3 +121,73 @@ Dans l'élément, on accède au paramètre avec la fonction __useParams()__ :
     }
 ```  
 
+## HashRouter  
+
+Un __<HashRouter\>__ est une alternative à `BrowserRouter` qui stocke l'emplacement actuel dans la partie __fragment (#)__ de l'URL plutôt que dans le chemin.
+
+``` ts title="App.tsx"
+import { HashRouter, Routes, Route } from "react-router-dom";
+
+function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Modele />}>
+          <Route index element={<PagePrincipale />} />
+          <Route path="dadams" element={<DouglasAdams />} />
+        </Route>
+      </Routes>
+    </HashRouter>
+  );
+}
+```
+
+Les URLs générées ressemblent à ceci :
+
+| Page | BrowserRouter | HashRouter |
+|------|---------------|------------|
+| Accueil | `monsite.com/` | `monsite.com/#/` |
+| Douglas Adams | `monsite.com/dadams` | `monsite.com/#/dadams` |
+| Livre #3 | `monsite.com/livre/3` | `monsite.com/#/livre/3` |
+
+!!! manuel 
+    [HashRouter](https://reactrouter.com/en/main/router-components/hash-router)
+
+## BrowserRouter vs HashRouter
+
+La différence fondamentale est ce que le serveur web reçoit lors d'une requête :
+
+- Avec **BrowserRouter**, le serveur reçoit le chemin complet (ex. : `/dadams`). Si le serveur ne connaît pas cette route, il retourne une erreur **404**.
+- Avec **HashRouter**, le serveur ne reçoit jamais la partie après le `#`. Il reçoit toujours `/` et le navigateur gère le reste localement. Aucune configuration serveur n'est nécessaire.
+
+### Impact sur le déploiement d'une SPA
+
+C'est là que la différence devient concrète.
+
+**Problème avec BrowserRouter :** Quand un utilisateur visite directement `monsite.com/dadams` ou rafraîchit la page, le serveur cherche un fichier à l'emplacement `/dadams`. Comme ce fichier n't'existe pas (c'est React qui gère la navigation), le serveur retourne une erreur 404.
+
+**Solution avec BrowserRouter :** Il faut configurer le serveur pour rediriger toutes les requêtes vers `index.html` afin que React Router prenne le relais. Sur Azure Static Web Apps, cela se fait avec le fichier `staticwebapp.config.json` :
+
+``` json title="staticwebapp.config.json"
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/dist/*.{svg,png,jpg,gif}", "/dist/assets/*"]
+  }
+}
+```
+
+**Avantage de HashRouter :** Aucune configuration serveur requise. Ça fonctionne sur n'importe quel hébergement de fichiers statiques (GitHub Pages, un simple serveur Apache, etc.) sans modification.
+
+### Quand utiliser lequel ?
+
+| Critère | BrowserRouter | HashRouter |
+|---------|---------------|------------|
+| URLs propres (sans `#`) | Oui | Non |
+| Configuration serveur requise | Oui | Non |
+| Référencement (SEO) | Meilleur | Plus faible |
+| Hébergement simple (GitHub Pages, S3) | Nécessite config | Fonctionne d'emblée |
+| Applications internes / prototypage | Oui | Oui |
+
+En production avec un hébergement que vous contrôlez (Azure, Vercel, Netlify), privilégiez **BrowserRouter** pour les URLs propres. Pour un hébergement statique sans configuration possible, **HashRouter** est la solution simple.
+

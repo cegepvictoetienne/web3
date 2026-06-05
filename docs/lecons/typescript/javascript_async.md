@@ -141,6 +141,16 @@ async function myFetch() {
     return await response.blob ();
 }
 ```   
+
+On peut recevoir des données en format JSON à partir d'un API REST comme ceci :  
+
+```ts title="lire_todo.ts"  
+fetch('https://jsonplaceholder.typicode.com/todos/1')
+      .then(response => response.json())
+      .then(json => console.log(json))
+```  
+
+
 # Sous le capot de Node.JS 
 
 ## Exécution de code synchrone  

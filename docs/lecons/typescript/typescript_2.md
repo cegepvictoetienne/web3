@@ -2,7 +2,7 @@
 
 
 
-## TODO : Décomposition  
+## Décomposition  
 
 La décomposition est une syntaxe puissante en TypeScript (et JavaScript ES6+) qui permet d'extraire des valeurs de tableaux ou des propriétés d'objets dans des variables distinctes. Cela rend le code plus concis et plus lisible.
 
@@ -249,14 +249,185 @@ console.log(b); // Affiche 1
 ``` 
 
 
-## TODO : Manipulations de tableaux
+## Manipulations de tableaux
 
-### map  
-### every  
-### some  
-### reduce  
+### map
 
-## TODO : L'**opérateur conditionnel (ternaire)**.
+La méthode `map` transforme chaque élément d'un tableau et retourne un **nouveau tableau** de même longueur, sans modifier l'original.
+
+```typescript
+const nombres: number[] = [1, 2, 3, 4, 5];
+
+const doubles: number[] = nombres.map((n) => n * 2);
+
+console.log(doubles); // Affiche [2, 4, 6, 8, 10]
+```
+
+Avec des objets :
+
+```typescript
+interface Produit {
+  id: number;
+  nom: string;
+  prix: number;
+}
+
+const produits: Produit[] = [
+  { id: 1, nom: 'Pomme', prix: 1.5 },
+  { id: 2, nom: 'Banane', prix: 0.75 },
+];
+
+const noms: string[] = produits.map((p) => p.nom);
+
+console.log(noms); // Affiche ['Pomme', 'Banane']
+```
+
+### every
+
+La méthode `every` vérifie si **tous** les éléments d'un tableau satisfont une condition. Elle retourne `true` si tous les éléments passent le test, `false` dès qu'un seul échoue.
+
+```typescript
+const notes: number[] = [85, 90, 78, 92];
+
+const tousReussis: boolean = notes.every((note) => note >= 60);
+
+console.log(tousReussis); // Affiche true
+```
+
+```typescript
+const ages: number[] = [22, 17, 30, 25];
+
+const tousMajeurs: boolean = ages.every((age) => age >= 18);
+
+console.log(tousMajeurs); // Affiche false (17 < 18)
+```
+
+### some
+
+La méthode `some` vérifie si **au moins un** élément d'un tableau satisfait une condition. Elle retourne `true` dès qu'un élément passe le test, `false` si aucun ne le passe.
+
+```typescript
+const notes: number[] = [45, 70, 38, 55];
+
+const auMoinsUnEchec: boolean = notes.some((note) => note < 60);
+
+console.log(auMoinsUnEchec); // Affiche true
+```
+
+```typescript
+const produits = [
+  { nom: 'Pomme', enStock: false },
+  { nom: 'Banane', enStock: true },
+  { nom: 'Orange', enStock: false },
+];
+
+const stockDisponible: boolean = produits.some((p) => p.enStock);
+
+console.log(stockDisponible); // Affiche true
+```
+
+### reduce
+
+La méthode `reduce` applique une fonction accumulatrice sur chaque élément du tableau pour le **réduire à une seule valeur**. Elle accepte un accumulateur (la valeur en cours de construction) et l'élément courant.
+
+```typescript
+const nombres: number[] = [1, 2, 3, 4, 5];
+
+const somme: number = nombres.reduce((accumulateur, n) => accumulateur + n, 0);
+
+console.log(somme); // Affiche 15
+```
+
+Calculer le total d'une commande :
+
+```typescript
+interface Article {
+  nom: string;
+  prix: number;
+  quantite: number;
+}
+
+const panier: Article[] = [
+  { nom: 'Pomme', prix: 1.5, quantite: 3 },
+  { nom: 'Banane', prix: 0.75, quantite: 5 },
+  { nom: 'Orange', prix: 2.0, quantite: 2 },
+];
+
+const total: number = panier.reduce(
+  (acc, article) => acc + article.prix * article.quantite,
+  0
+);
+
+console.log(total); // Affiche 12.25
+```
+
+### filter
+
+La méthode `filter` retourne un **nouveau tableau** contenant uniquement les éléments qui satisfont une condition. Les éléments qui échouent le test sont exclus.
+
+```typescript
+const nombres: number[] = [1, 2, 3, 4, 5, 6, 7, 8];
+
+const pairs: number[] = nombres.filter((n) => n % 2 === 0);
+
+console.log(pairs); // Affiche [2, 4, 6, 8]
+```
+
+Avec des objets :
+
+```typescript
+interface Produit {
+  nom: string;
+  prix: number;
+  enStock: boolean;
+}
+
+const produits: Produit[] = [
+  { nom: 'Pomme', prix: 1.5, enStock: true },
+  { nom: 'Banane', prix: 0.75, enStock: false },
+  { nom: 'Orange', prix: 2.0, enStock: true },
+];
+
+const disponibles: Produit[] = produits.filter((p) => p.enStock);
+
+console.log(disponibles);
+// Affiche [{ nom: 'Pomme', ... }, { nom: 'Orange', ... }]
+```
+
+### find
+
+La méthode `find` retourne le **premier élément** qui satisfait une condition, ou `undefined` si aucun élément ne correspond.
+
+```typescript
+const nombres: number[] = [1, 3, 5, 6, 7, 8];
+
+const premierPair: number | undefined = nombres.find((n) => n % 2 === 0);
+
+console.log(premierPair); // Affiche 6
+```
+
+Avec des objets :
+
+```typescript
+interface Utilisateur {
+  id: number;
+  nom: string;
+}
+
+const utilisateurs: Utilisateur[] = [
+  { id: 1, nom: 'Alice' },
+  { id: 2, nom: 'Bob' },
+  { id: 3, nom: 'Charlie' },
+];
+
+const utilisateur: Utilisateur | undefined = utilisateurs.find((u) => u.id === 2);
+
+console.log(utilisateur); // Affiche { id: 2, nom: 'Bob' }
+```
+
+Contrairement à `filter` qui retourne un tableau, `find` retourne un seul élément. Il faut donc toujours gérer le cas où le résultat est `undefined`.
+
+##  L'**opérateur conditionnel (ternaire)**.
 
 ``` javascript
    const valeur = id === 0 ? "allo" : "hello";

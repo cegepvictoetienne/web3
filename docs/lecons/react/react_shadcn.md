@@ -16,7 +16,7 @@ shadcn/ui est une collection de composantes réutilisables et accessibles constr
 
 shadcn/ui nécessite **Tailwind CSS**. Assurez-vous d'avoir suivi la [leçon sur Tailwind CSS](react_tw.md) avant de continuer.
 
-# Installation
+# Installation de shadcn  
 
 ## 1. Modifier tsconfig.json
 
@@ -31,7 +31,6 @@ Modifiez `tsconfig.json` à la racine du projet :
     { "path": "./tsconfig.app.json" }
   ],
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
@@ -44,7 +43,6 @@ Modifiez aussi `tsconfig.app.json` pour ajouter les mêmes chemins dans les opti
 ``` json title="tsconfig.app.json"
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
@@ -87,9 +85,20 @@ npx shadcn@latest init
 L'assistant interactif vous posera quelques questions. Voici les choix recommandés :
 
 ``` nodejsrepl title="console"
-✔ Which style would you like to use? › Default
-✔ Which color would you like to use as the base color? › Neutral
-✔ Would you like to use CSS variables for theming? › yes
+? Select a component library › - Use arrow-keys. Return to submit.
+❯   Radix
+    Base
+? Which preset would you like to use? › - Use arrow-keys. Return to submit.
+❯   Nova - Lucide / Geist
+    Vega
+    Maia
+    Lyra
+    Mira
+    Luma
+    Sera
+    Rhea
+    Custom
+
 ```
 
 Cette commande crée un fichier `components.json` de configuration et ajoute les styles de base dans votre fichier CSS.
@@ -101,7 +110,7 @@ Chaque composante s'installe séparément avec la commande `add`. Le code source
 ``` nodejsrepl title="console"
 npx shadcn@latest add button
 npx shadcn@latest add navigation-menu
-npx shadcn@latest add form
+npx shadcn@latest add field
 npx shadcn@latest add input
 npx shadcn@latest add card
 npx shadcn@latest add badge
@@ -110,7 +119,7 @@ npx shadcn@latest add badge
 !!! tip
     Vous pouvez ajouter plusieurs composantes d'un seul coup :
     ``` nodejsrepl title="console"
-    npx shadcn@latest add button card badge input form navigation-menu
+    npx shadcn@latest add button card badge input field navigation-menu
     ```
 
 # Barre de navigation
@@ -218,35 +227,27 @@ shadcn/ui intègre [react-hook-form](https://react-hook-form.com/) pour la gesti
 npm install react-hook-form zod @hookform/resolvers
 ```
 
+Ajouter les composantes shadcn/ui nécessaires :
+
+``` nodejsrepl title="console"
+npx shadcn@latest add field input button
+```
+
 ## Exemple de formulaire de contact
 
 ``` tsx title="src/components/FormulaireContact/FormulaireContact.tsx"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
 // 1. Définir le schéma de validation avec Zod
 const schemaFormulaire = z.object({
-  nom: z.string().min(2, {
-    message: "Le nom doit contenir au moins 2 caractères.",
-  }),
-  courriel: z.string().email({
-    message: "Adresse courriel invalide.",
-  }),
-  message: z.string().min(10, {
-    message: "Le message doit contenir au moins 10 caractères.",
-  }),
+  nom: z.string().min(2, "Le nom doit contenir au moins 2 caractères."),
+  courriel: z.string().email("Adresse courriel invalide."),
+  message: z.string().min(10, "Le message doit contenir au moins 10 caractères."),
 })
 
 // 2. Dériver le type TypeScript depuis le schéma
@@ -272,60 +273,71 @@ export function FormulaireContact() {
     <div className="max-w-md mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Contactez-nous</h2>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-          <FormField
-            control={form.control}
-            name="nom"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nom</FormLabel>
-                <FormControl>
-                  <Input placeholder="Jean Tremblay" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Controller
+          name="nom"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Nom</FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                aria-invalid={fieldState.invalid}
+                placeholder="Jean Tremblay"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="courriel"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Courriel</FormLabel>
-                <FormControl>
-                  <Input placeholder="jean@example.com" type="email" {...field} />
-                </FormControl>
-                <FormDescription>
-                  Nous ne partagerons jamais votre adresse.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Controller
+          name="courriel"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Courriel</FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                type="email"
+                aria-invalid={fieldState.invalid}
+                placeholder="jean@example.com"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Message</FormLabel>
-                <FormControl>
-                  <Input placeholder="Votre message..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Controller
+          name="message"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Message</FieldLabel>
+              <Input
+                {...field}
+                id={field.name}
+                aria-invalid={fieldState.invalid}
+                placeholder="Votre message..."
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
 
-          <Button type="submit" className="w-full">
-            Envoyer
-          </Button>
+        <Button type="submit" className="w-full">
+          Envoyer
+        </Button>
 
-        </form>
-      </Form>
+      </form>
     </div>
   )
 }
@@ -346,16 +358,15 @@ graph LR
 
 | Composante | Rôle |
 |---|---|
-| `Form` | Fournit le contexte react-hook-form |
-| `FormField` | Connecte un champ au formulaire via `control` et `name` |
-| `FormItem` | Regroupe le label, le champ, la description et le message |
-| `FormLabel` | Étiquette du champ |
-| `FormControl` | Encapsule l'élément de saisie |
-| `FormDescription` | Texte d'aide sous le champ |
-| `FormMessage` | Affiche automatiquement le message d'erreur Zod |
+| `Controller` | Connecte un champ au formulaire via `control` et `name` |
+| `Field` | Regroupe le label, le champ et le message d'erreur ; reçoit `data-invalid` pour le style |
+| `FieldLabel` | Étiquette du champ, liée au champ via `htmlFor` |
+| `FieldError` | Affiche automatiquement le message d'erreur Zod |
+| `fieldState.invalid` | Booléen indiquant si le champ est en erreur |
+| `fieldState.error` | Objet contenant le message d'erreur |
 
 !!! manuel
-    [Form — shadcn/ui](https://ui.shadcn.com/docs/components/form)
+    [Form — shadcn/ui](https://ui.shadcn.com/docs/forms/react-hook-form)
 
 !!! manuel
     [Zod — Documentation](https://zod.dev/)
@@ -518,3 +529,14 @@ export default App
 
 !!! manuel
     [Tous les composantes shadcn/ui](https://ui.shadcn.com/docs/components/accordion)
+
+
+## Thème foncé avec shadcn  
+
+Le thème foncé est simplement une classe CSS avec toutes les variables de couleurs. Vous pouvez activer le thème en faisant ceci :  
+
+``` tsx title="src/App.tsx"  
+  const root = window.document.documentElement;
+
+  root.classList.add('dark');
+```

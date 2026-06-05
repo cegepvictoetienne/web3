@@ -12,7 +12,8 @@ Un **ORM** (Object-Relational Mapping) est un outil qui permet de manipuler une 
 **Prisma** est l'ORM recommandé pour les projets Next.js. Il supporte MySQL, PostgreSQL, SQLite et d'autres bases de données.
 
 !!! manuel
-    [Documentation officielle Prisma](https://www.prisma.io/docs)
+    [Documentation officielle Prisma](https://www.prisma.io/docs)  
+    [Démarrage rapide - MySQL](https://www.prisma.io/docs/prisma-orm/quickstart/mysql)  
 
 ## Installation et configuration
 
@@ -20,7 +21,7 @@ Un **ORM** (Object-Relational Mapping) est un outil qui permet de manipuler une 
 
 ``` nodejsrepl title="console"
 npm install prisma --save-dev
-npm install @prisma/client
+npm install @prisma/client @prisma/adapter-mariadb
 ```
 
 ### Initialiser Prisma avec MySQL
@@ -40,6 +41,10 @@ Modifiez le fichier `.env` avec vos informations de connexion MySQL :
 
 ``` title=".env"
 DATABASE_URL="mysql://utilisateur:motdepasse@localhost:3306/nom_de_la_bd"
+DATABASE_HOST="localhost"
+DATABASE_USER="utilisteur"
+DATABASE_PASSWORD="motdepasse"
+DATABASE_NAME="nom_de_la_bd"
 ```
 
 ## Schéma Prisma
@@ -48,6 +53,12 @@ Le fichier `schema.prisma` est le coeur de Prisma. Il définit la structure de v
 
 ``` prisma title="prisma/schema.prisma"
 --8<-- "next-prisma/prisma/schema.prisma"
+```
+
+Pour générer un schéma prisma à partir d'une base de données existante :  
+
+``` nodejsrepl title="console"
+npx prisma db pull
 ```
 
 ### Types de données courants
@@ -107,12 +118,31 @@ npx prisma migrate reset
 
 Le Prisma Client est l'objet qui permet d'effectuer des opérations sur la base de données.
 
+Pour générer un client prisma à partir d'un schéma existant :  
+
+``` nodejsrepl title="console"
+npx prisma generate
+```
+
 ### Configuration du client
 
 Dans un projet Next.js, il est important de créer une instance unique de Prisma Client pour éviter les problèmes de connexion en développement :
 
 ``` ts title="lib/prisma.ts"
---8<-- "next-prisma/lib/prisma.ts"
+import "dotenv/config";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import { PrismaClient } from "./generated/prisma/client";
+
+const adapter = new PrismaMariaDb({
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  connectionLimit: 5,
+});
+const prisma = new PrismaClient({ adapter });
+
+export { prisma };
 ```
 
 ### Opérations CRUD

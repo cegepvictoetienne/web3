@@ -27,6 +27,7 @@ Créer une application React de **catalogue de films** en utilisant shadcn/ui.
 
 - Afficher un formulaire permettant d'ajouter un nouveau film à la grille
 - Utiliser `react-hook-form` avec la validation `zod`
+- Utiliser `Controller` de react-hook-form avec les composantes `Field`, `FieldLabel` et `FieldError` de shadcn/ui
 - Les champs du formulaire :
     - **Titre** (obligatoire, minimum 2 caractères)
     - **Année** (obligatoire, entre 1888 et l'année courante)
