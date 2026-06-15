@@ -39,6 +39,9 @@ nav = [
       {"Internationalisation" = "lecons/react/internationalisation.md"},
       {"Démarrage rapide d'un projet React" = "lecons/react/react_demarrage_rapide.md"},
     ]},
+    {"Outils" = [
+      {"Immer" = "lecons/outils/immer.md"},
+    ]},
     {"Next.js" = [
       {"Introduction à Next.js" = "lecons/next.js/introduction.md"},
       {"Routage" = "lecons/next.js/routage.md"},
@@ -49,9 +52,6 @@ nav = [
       {"Prisma ORM" = "lecons/next.js/orm.md"},
       {"Server Actions et formulaires" = "lecons/next.js/server_actions.md"},
       {"Internationalisation (next-intl)" = "lecons/next.js/next_intl.md"},
-    ]},
-    {"Outils" = [
-      {"Immer" = "lecons/outils/immer.md"},
     ]},
     {"Déploiement" = [
       {"Inscription à Azure" = "lecons/deploiement/azure_inscription.md"},
