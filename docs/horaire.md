@@ -8,8 +8,8 @@ Cours|Date|Sujet|Exercice
 5|2026-09-08 14:15:00|[Styles : TailWindCSS](lecons/react/react_tw.md) <br/> [shadcn/UI](lecons/react/react_shadcn)|[React et les styles](exercices/react/react_styles.md)
 6|2026-09-11 14:15:00|[Routes](lecons/react/react3.md)|[React et les routes](exercices/react/react_routes.md)
 7|2026-09-15 14:15:00|[API](lecons/react/react4.md)<br/> [useContext](lecons/react/react_usecontext.md)<br/> [Règles de React](lecons/react/regles_react.md)|[React et contexte](exercices/react/react_contexte.md)
-8|2026-09-17 10:15:00|[Immer](lecons/outils/immer.md)|
-9|2026-09-22 14:15:00|[useReducer](lecons/react/react_usereducer.md)|
+8|2026-09-17 10:15:00|[Immer](lecons/outils/immer.md)|[Immer](exercices/outils/immer.md)
+9|2026-09-22 14:15:00|[useReducer](lecons/react/react_usereducer.md)|[React et useReducer](exercices/react/react_usereducer.md)
 10|2026-09-24 10:15:00|[Internationalisation](lecons/react/internationalisation.md)|[React et l'Internationalisation](exercices/react/react_intl.md)
 11|2026-09-29 14:15:00|Évaluation formative|
 12|2026-10-01 10:15:00|Retour sur formatif <br/> Période de questions|
@@ -24,7 +24,7 @@ Cours|Date|Sujet|Exercice
 21|2026-11-12 10:15:00|[Prisma ORM](lecons/next.js/orm.md)|
 22|2026-11-17 14:15:00|[Server Actions et formulaires](lecons/next.js/server_actions.md)|[Server Actions](exercices/next_server_actions.md)
 23|2026-11-19 10:15:00|[Internationalisation avec Next.js](lecons/next.js/next_intl.md)|[Internationalisation](exercices/next_intl_exercice.md)
-24|2026-11-24 14:15:00|[React dans Azure](lecons/deploiement/azure_react.md)|[Azure](exercices/azure.md)
+24|2026-11-24 14:15:00|[React dans Azure](lecons/deploiement/azure_react.md)|
 25|2026-11-26 10:15:00|Projet formatif next.js|
 26|2026-12-01 14:15:00|Projet formatif next.js|
 27|2026-12-03 10:15:00|Projet formatif next.js|

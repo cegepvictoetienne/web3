@@ -68,9 +68,13 @@ nav = [
     {"Penser en React et Mécanique de React" = "exercices/react/react_penser_mecanique.md"},
     {"React et les styles" = "exercices/react/react_styles.md"},
     {"React et les routes" = "exercices/react/react_routes.md"},
+    {"React et useReducer" = "exercices/react/react_usereducer.md"},
     {"React et contexte" = "exercices/react/react_contexte.md"},
     {"React et l'internationalisation" = "exercices/react/react_intl.md"},
     {"Préparation examen React" = "exercices/react/react_prep_exam_pendu.md"},
+    ]},
+    {"Outils" = [
+    {"Immer" = "exercices/outils/immer.md"},
     ]},
     {"Next.js" = [
     {"Next.js - Introduction" = "exercices/next_intro.md"},
@@ -85,6 +89,7 @@ nav = [
     ]},
   ]},
   {"Projet intégrateur" = "projet_integrateur.md"},
+  {"Déclaration de l'utilisation de l'IA" = "declaration-ia.md"},
   {"À propos" = "apropos.md"},
   {"Techniques de l'informatique" = "https://techinfo.profinfo.ca"},
 ]
