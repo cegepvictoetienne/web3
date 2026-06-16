@@ -10,3 +10,14 @@ Créer une application Next.js de présentation personnelle :
 - Modifier le `layout.tsx` pour ajouter un en-tête et un pied de page communs à toutes les pages
 - Créer une deuxième page `app/contact/page.tsx` avec vos informations de contact et ses propres métadonnées
 - Lancer le serveur de développement et vérifier le résultat dans le navigateur
+
+
+
+<figure markdown>
+  ![exercice](images/nextjs-intro.png){ width="600" }
+  <figcaption>Aspect visuel de l'exercice d'introduction à Next.js</figcaption>
+</figure>
+
+
+[Version démo](https://next-intro.profinfo.ca)  
+
