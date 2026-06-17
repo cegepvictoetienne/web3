@@ -11,3 +11,11 @@ Créer un mini site de recettes de cuisine :
 - Ajouter un fichier `loading.tsx` dans `app/recettes/` qui affiche un message de chargement
 - Ajouter un fichier `error.tsx` dans `app/recettes/[id]/` qui affiche un message d'erreur si la recette n'existe pas
 - La page de détail doit afficher un message « Recette introuvable » si l'`id` ne correspond à aucune recette du tableau
+
+<figure markdown>
+  ![exercice](images/nextjs-routage.png){ width="600" }
+  <figcaption>Aspect visuel de l'exercice de routage dans Next.js</figcaption>
+</figure>
+
+
+[Version démo](https://next-routage.profinfo.ca)  
