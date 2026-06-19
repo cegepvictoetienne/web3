@@ -7,7 +7,7 @@ Cours|Date|Sujet|Exercice
 4|2026-09-03 08:15:00|[Penser en React](lecons/react/penser_en_react.md) <br/> [Mécanique de React](lecons/react/mecanique_react.md)|[Penser en React et Mécanique de React](exercices/react/react_penser_mecanique.md)
 5|2026-09-08 14:15:00|[Styles : TailWindCSS](lecons/react/react_tw.md) <br/> [shadcn/UI](lecons/react/react_shadcn)|[React et les styles](exercices/react/react_styles.md)
 6|2026-09-11 14:15:00|[Routes](lecons/react/react3.md)|[React et les routes](exercices/react/react_routes.md)
-7|2026-09-15 14:15:00|[API](lecons/react/react4.md)<br/> [useContext](lecons/react/react_usecontext.md)<br/> [Règles de React](lecons/react/regles_react.md)|[React et contexte](exercices/react/react_contexte.md)
+7|2026-09-15 14:15:00|[API](lecons/react/react4.md)<br/> [useContext](lecons/react/react_usecontext.md)<br/> [Règles de React](lecons/react/regles_react.md)|[React et anti-rebond](exercices/react/react_debounce.md) <br/>[React et contexte](exercices/react/react_contexte.md)
 8|2026-09-17 08:15:00|[Immer](lecons/outils/immer.md)|[Immer](exercices/outils/immer.md)
 9|2026-09-22 14:15:00|[useReducer](lecons/react/react_usereducer.md)|[React et useReducer](exercices/react/react_usereducer.md)
 10|2026-09-24 08:15:00|[Internationalisation](lecons/react/internationalisation.md)|[React et l'Internationalisation](exercices/react/react_intl.md)

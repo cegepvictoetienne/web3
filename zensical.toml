@@ -68,6 +68,7 @@ nav = [
     {"Penser en React et Mécanique de React" = "exercices/react/react_penser_mecanique.md"},
     {"React et les styles" = "exercices/react/react_styles.md"},
     {"React et les routes" = "exercices/react/react_routes.md"},
+    {"React et le debounce" = "exercices/react/react_debounce.md"},
     {"React et useReducer" = "exercices/react/react_usereducer.md"},
     {"React et contexte" = "exercices/react/react_contexte.md"},
     {"React et l'internationalisation" = "exercices/react/react_intl.md"},
