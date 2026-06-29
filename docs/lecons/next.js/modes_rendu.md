@@ -13,14 +13,14 @@ Next.js propose plusieurs façons de générer et d'afficher le contenu d'une pa
 
 ## Rendu statique (SSG)
 
-Par défaut, Next.js génère les pages **statiquement** à la compilation (`npm run build`). Le HTML est produit une seule fois et servi directement depuis un CDN. C'est le mode le plus rapide.
+Par défaut, Next.js génère les pages **statiquement** à la compilation (`npm run build`). Le HTML est produit une seule fois et servi directement. C'est le mode le plus rapide.
 
 ``` ts title="app/a-propos/page.tsx (rendu statique)"
 export default function AProposPage() {
   return (
     <main>
       <h1>À propos</h1>
-      <p>Cette page est générée une seule fois au moment du build.</p>
+      <p>Cette page est générée une seule fois au moment de la compilation.</p>
     </main>
   );
 }
@@ -33,11 +33,11 @@ Quand une page ne contient pas de données dynamiques, Next.js l'optimise automa
 
 ## Rendu statique avec données (SSG avec fetch)
 
-On peut aussi générer une page statique qui **récupère des données** au moment du build. La page est quand même générée une seule fois, mais avec des données réelles.
+On peut aussi générer une page statique qui **récupère des données** au moment de la compilation. La page est quand même générée une seule fois, mais avec des données réelles.
 
 ``` ts title="app/produits/page.tsx (SSG avec fetch)"
 export default async function ProduitsPage() {
-  // Ce fetch s'exécute une seule fois, au moment du build
+  // Ce fetch s'exécute une seule fois, au moment de la compilation
   const response = await fetch("https://api.exemple.com/produits");
   const produits = await response.json();
 
@@ -55,7 +55,7 @@ export default async function ProduitsPage() {
 ```
 
 !!! warning "Attention"
-    Si les données changent après le build, la page affichera des données obsolètes jusqu'au prochain build.
+    Si les données changent après la compilation, la page affichera des données obsolètes jusqu'à la prochaine compilation.
 
 ## Rendu statique incrémentiel (ISR)
 
@@ -177,19 +177,19 @@ graph TD
 
 ## Vérifier le mode de rendu
 
-Lors du build (`npm run build`), Next.js affiche le mode de rendu de chaque route :
+Lors de la compilation (`npm run build`), Next.js affiche le mode de rendu de chaque route :
 
 ``` nodejsrepl title="console"
-Route (app)                    Size     First Load JS
-┌ ○ /                          142 B          87.2 kB
-├ ○ /a-propos                  142 B          87.2 kB
-├ ƒ /profil                    142 B          87.2 kB
-└ ● /produits                  142 B          87.2 kB
-    └ /produits/[id]
+Route (app)      Revalidate  Expire
+┌ ○ /
+├ ○ /_not-found
+├ ○ /a-propos
+├ ƒ /profil
+└ ○ /produits           60s      1y
 
-○  (Static)   prérendu en HTML statique
-●  (SSG)      prérendu en HTML statique avec données
-ƒ  (Dynamic)  rendu côté serveur à la demande
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 ```
 
 !!! manuel
