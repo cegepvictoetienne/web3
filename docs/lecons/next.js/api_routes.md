@@ -1,8 +1,8 @@
-# API Routes (Route Handlers)
+# Routes d'API  
 
 ## Qu'est-ce qu'une Route API
 
-Les Route Handlers de Next.js permettent de créer des **points d'accès API** directement dans votre application. Pas besoin d'un serveur backend séparé.
+Les gestionnaires de route de Next.js permettent de créer des **points d'accès API** directement dans votre application. Pas besoin d'un serveur d'applications dorsales séparé.
 
 Les routes API sont définies dans des fichiers `route.ts` à l'intérieur du dossier `app/api/`.
 
@@ -36,7 +36,7 @@ Chaque fichier `route.ts` peut exporter des fonctions nommées selon la méthode
 
 ## Tester les routes API
 
-Vous pouvez tester vos routes API avec un outil comme **Thunder Client** (extension VS Code) ou directement dans le navigateur pour les requêtes GET.
+Vous pouvez tester vos routes API avec un outil comme **Bruno** ou directement dans le navigateur pour les requêtes GET.
 
 ### Exemple de requête GET
 

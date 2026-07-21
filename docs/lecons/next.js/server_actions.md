@@ -2,48 +2,40 @@
 
 ## Qu'est-ce qu'une Server Action
 
-Les Server Actions sont des fonctions asynchrones qui s'exécutent **sur le serveur** et peuvent être appelées directement depuis vos composants. Elles permettent de gérer les soumissions de formulaires et les mutations de données sans créer de route API.
+En React pur, pour interagir avec une base de données (ex: un formulaire pour l'ajout d'un produit), il faut appeler un API (souvent en Express ou PHP). Les actions serveurs élimine le besoin d'un API distinct en permettant l'appel de fonctions asynchrone entre la portion client et serveur de votre application.  
 
 !!! manuel
     [Server Actions - Documentation Next.js](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
 
-## La directive "use server"
+## "use server"
 
-Pour déclarer une Server Action, ajoutez la directive `"use server"` au début du fichier :
+Une action serveur doit avoir `"use server"` au début du fichier :
 
 ``` ts title="app/actions/produit.actions.ts"
 --8<-- "next-prisma/app/actions/produit.actions.ts"
 ```
 
-Points importants :
-
-- `"use server"` indique que toutes les fonctions exportées de ce fichier sont des Server Actions.
-- Ces fonctions s'exécutent **uniquement sur le serveur**, jamais dans le navigateur.
-- `revalidatePath` permet de rafraîchir les données affichées sur une page après une modification.
-
 ## Formulaires avec Server Actions
 
-Les Server Actions peuvent être utilisées directement dans l'attribut `action` d'un formulaire HTML :
+On peut utiliser une actions serveur directement dans l'attribut `action` d'un formulaire HTML :
 
 ``` ts title="app/produits/nouveau/page.tsx"
 --8<-- "next-prisma/app/produits/nouveau/page.tsx"
 ```
 
-Lorsque le formulaire est soumis, la fonction `creerProduit` est appelée sur le serveur avec les données du formulaire sous forme de `FormData`.
+Lorsque le formulaire est soumis, la fonction `creerProduit` est appelée sur le serveur avec les données du formulaire en `FormData`.
 
 ## Utiliser une Server Action avec bind
 
-Pour passer des arguments supplémentaires à une Server Action (comme un ID), utilisez `.bind()` :
+Si vous avez des variables à passer à l'action serveur sans l'ajouter comme champ du formulaire, il faut utiliser `.bind()` :
 
 ``` ts title="app/produits/page.tsx"
 --8<-- "next-prisma/app/produits/page.tsx"
 ```
 
-Dans cet exemple, `supprimerProduit.bind(null, produit.id)` crée une nouvelle fonction qui appellera `supprimerProduit` avec l'ID du produit en premier argument.
-
 ## Validation de formulaires
 
-Il est important de valider les données côté serveur dans vos Server Actions. Voici un exemple avec validation et retour d'erreurs :
+Même si la validation est faite du côté client, pour des raisons de sécurité et d'intégrité il faut valider toutes les données du formulaire dans l'action serveur. 
 
 ``` ts title="Validation dans une Server Action"
 "use server";
@@ -117,7 +109,7 @@ export default function FormulaireProduit() {
 
 ## Revalidation des données
 
-Après une mutation (création, modification, suppression), il faut indiquer à Next.js de rafraîchir les données affichées. La fonction `revalidatePath` permet de revalider les données associées à un chemin :
+Après un changement dans les données (création, modification, suppression), il faut dire à Next.js de rafraîchir les données affichées en utilisant `revalidatePath` :
 
 ``` ts title="Revalidation"
 import { revalidatePath } from "next/cache";
@@ -129,4 +121,4 @@ revalidatePath("/produits");
 revalidatePath("/", "layout");
 ```
 
-Sans revalidation, les pages afficheront les données en cache et ne refléteront pas les modifications effectuées par la Server Action.
+Sans `revalidatePath`, les pages afficheront les données en cache sans les dernières modifications...

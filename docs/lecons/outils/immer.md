@@ -1,16 +1,15 @@
 # Immer
 
-Immer est une librairie qui simplifie la manipulation d'état **immuable**. Elle vous permet d'écrire du code qui ressemble à une mutation directe de l'état, mais produit en réalité un nouvel objet immuable en arrière-plan.
+Chaque problématique a une module pour y répondre. Le module Immer a été conçu pour faciliter l'écriture de changements de variables immuables sans le tracas d'utiliser l'opérateur `...`.
 
 !!! manuel
     [Immer - Documentation](https://immerjs.github.io/immer/)
 
 ## Le problème qu'Immer résout
 
-Dans React, on ne modifie jamais directement l'état — on retourne toujours un nouvel objet. Avec des structures imbriquées, cela devient vite verbeux :
+Imaginez le code suivant, tout ça pour seulement une modification d'une propriété imbriquée :  
 
 ``` ts
-// Sans Immer — beaucoup de spread operators
 return {
   ...state,
   utilisateur: {
@@ -26,7 +25,6 @@ return {
 Avec Immer, on peut écrire directement :
 
 ``` ts
-// Avec Immer — lisible et concis
 return produce(state, draft => {
   draft.utilisateur.adresse.ville = 'Montréal';
 });
@@ -40,7 +38,7 @@ npm install immer
 
 ## La fonction produce
 
-`produce` est la fonction principale d'Immer. Elle prend l'état actuel et une fonction de « recette » qui reçoit un objet `draft` (brouillon) que l'on peut muter librement.
+`produce` est la fonction principale d'Immer. Le premier paramètre est l'état actuel. Le second paramètre est une fonction qui reçoit un brouillon (un draft) qui est modifié directement. 
 
 ``` ts
 import { produce } from 'immer';
@@ -50,9 +48,6 @@ const nouvelEtat = produce(etatActuel, draft => {
   draft.propriete = 'nouvelle valeur';
 });
 ```
-
-!!! note
-    Immer utilise les `Proxy` JavaScript pour intercepter les mutations du `draft` et construire un nouvel objet immuable. L'état original n'est **jamais** modifié.
 
 ## Exemples de base
 

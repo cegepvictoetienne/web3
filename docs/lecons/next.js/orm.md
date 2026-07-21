@@ -2,14 +2,15 @@
 
 ## Qu'est-ce qu'un ORM
 
-Un **ORM** (Object-Relational Mapping) est un outil qui permet de manipuler une base de données relationnelle en utilisant des objets dans votre code, plutôt que d'écrire des requêtes SQL manuellement.
+Un ORM (de l'anglais Object-Relational Mapping) sert à simplifier l'interface entre la BD et le code fonctionnel. Au lieu de faire des requêtes SQL directement dans le code (comme des prepare en PHP),  on va utiliser des fonctions typescript.
+
 
 | Sans ORM (SQL brut) | Avec ORM (Prisma) |
 |---|---|
 | `SELECT * FROM produit WHERE id = 1` | `prisma.produit.findUnique({ where: { id: 1 } })` |
 | `INSERT INTO produit (nom, prix) VALUES ('Clavier', 129.99)` | `prisma.produit.create({ data: { nom: 'Clavier', prix: 129.99 } })` |
 
-**Prisma** est l'ORM recommandé pour les projets Next.js. Il supporte MySQL, PostgreSQL, SQLite et d'autres bases de données.
+Il existe plusieurs modules ORM, mais Prisma est largement utilisé. Dans le cours, nous l'utiliserons avec MySQL.
 
 !!! manuel
     [Documentation officielle Prisma](https://www.prisma.io/docs)  
@@ -30,9 +31,9 @@ npm install @prisma/client @prisma/adapter-mariadb
 npx prisma init --datasource-provider mysql
 ```
 
-Cette commande crée :
+On se retrouve avec :
 
-- Un dossier `prisma/` avec un fichier `schema.prisma`
+- Un dossier `prisma/` contenant un fichier `schema.prisma`
 - Un fichier `.env` avec la variable `DATABASE_URL`
 
 ### Configurer la connexion à la base de données
@@ -49,13 +50,13 @@ DATABASE_NAME="nom_de_la_bd"
 
 ## Schéma Prisma
 
-Le fichier `schema.prisma` est le coeur de Prisma. Il définit la structure de votre base de données.
+Un des fichiers importants pour bien utiliser l'ORM est `schema.prisma` : c'est là qu'on décrit la BD.
 
 ``` prisma title="prisma/schema.prisma"
 --8<-- "next-prisma/prisma/schema.prisma"
 ```
 
-Pour générer un schéma prisma à partir d'une base de données existante :  
+Écrire ce fichier peut être difficile pour un débutant, le truc est de faire sa BD en SQL et extraire la BD dans Prisma :
 
 ``` nodejsrepl title="console"
 npx prisma db pull
@@ -82,16 +83,9 @@ npx prisma db pull
 | `@unique` | Valeur unique |
 | `?` après le type | Champ optionnel (nullable) |
 
-### Relations
-
-Dans l'exemple ci-dessus, un `Produit` appartient à une `Categorie`, et une `Categorie` peut avoir plusieurs `Produit`. C'est une relation **un-à-plusieurs**.
-
-- `@relation(fields: [categorieId], references: [id])` : indique que `categorieId` est la clé étrangère qui pointe vers `id` de `Categorie`.
-- `produits Produit[]` : côté inverse de la relation, une catégorie contient un tableau de produits.
-
 ## Migrations
 
-Les migrations permettent de synchroniser votre schéma Prisma avec la base de données.
+Durant la vie de votre application, il est presque certain que la BD va être changée. C'est là que la puissance de Prisma joue un rôle critique. Si vous modifiez `schema.prisma`, vous pouvez automatiser la mise à jour de la BD avec les migrations.
 
 ### Créer et appliquer une migration
 
@@ -99,16 +93,16 @@ Les migrations permettent de synchroniser votre schéma Prisma avec la base de d
 npx prisma migrate dev --name init
 ```
 
-Cette commande :
+En arrière-plan, Prisma :
 
-1. Compare le schéma Prisma avec l'état actuel de la base de données
-2. Génère un fichier SQL de migration
-3. Exécute la migration sur la base de données
-4. Régénère le Prisma Client
+1. Compare le schéma avec l'état actuel de la base de données
+2. Génère le fichier SQL correspondant à la différence
+3. Exécute ce SQL sur la base de données
+4. Régénère le Prisma Client pour que le code TypeScript reflète le nouveau schéma
 
 ### Réinitialiser la base de données
 
-Pour repartir à zéro (supprime toutes les données) :
+Pour avoir une BD vide, on peut faire une réinitialisation complète :
 
 ``` nodejsrepl title="console"
 npx prisma migrate reset
@@ -116,9 +110,8 @@ npx prisma migrate reset
 
 ## Prisma Client
 
-Le Prisma Client est l'objet qui permet d'effectuer des opérations sur la base de données.
-
-Pour générer un client prisma à partir d'un schéma existant :  
+Le schéma décrit la structure de la base de données, mais le client est l'interface de programmation à utiliser dans votre code. 
+Pour générer le client, faire la commande suivante :
 
 ``` nodejsrepl title="console"
 npx prisma generate
@@ -126,7 +119,7 @@ npx prisma generate
 
 ### Configuration du client
 
-Dans un projet Next.js, il est important de créer une instance unique de Prisma Client pour éviter les problèmes de connexion en développement :
+C'est recommandé de faire un singleton pour éviter les reconnections multiples lors du développement :
 
 ``` ts title="lib/prisma.ts"
 import "dotenv/config";
@@ -146,6 +139,8 @@ export { prisma };
 ```
 
 ### Opérations CRUD
+
+Voici des exemples de CRUD pour `produit`.
 
 #### Créer (Create)
 
@@ -199,19 +194,10 @@ await prisma.produit.delete({
 });
 ```
 
-## Prisma Studio
 
-Prisma Studio est une interface graphique pour visualiser et modifier les données de votre base de données :
+## données de départ
 
-``` nodejsrepl title="console"
-npx prisma studio
-```
-
-Cela ouvre un navigateur web à l'adresse `http://localhost:5555` avec une interface permettant de consulter, ajouter, modifier et supprimer des enregistrements.
-
-## Seed de données
-
-Le seeding permet d'insérer des données initiales dans la base de données, utile pour le développement et les tests.
+Après un `migrate reset`, la base de données est vide. Utilisez des données de départ avec un `seed`.
 
 ### Créer le fichier de seed
 

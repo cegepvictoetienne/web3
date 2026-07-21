@@ -5,18 +5,15 @@
 Dans Next.js, il existe deux types de composants :
 
 - **Server Components** : exécutés sur le serveur seulement (par défaut)
-- **Client Components** : exécutés sur le client (navigateur)
+- **Client Components** : exécutés dans le navigateur  
 
 Par défaut, tous les composants dans Next.js sont des **Server Components**.
 
 ## Server Components
 
-Les Server Components s'exécutent uniquement sur le serveur. Ils permettent de :
+Pourquoi utiliser des composantes serveur? Voici quelques besoins comblés :  
 
-- Accéder directement à la base de données
-- Lire des fichiers sur le serveur
-- Garder les clés secrètes sur le serveur
-- Réduire la quantité de JavaScript envoyée au navigateur
+Si vous voules accéder à la base de données, lire des fichiers sur le serveur, garder les clés secrètes (comme celles utilisées dans les appels API) sur le serveur, il faut utiliser les composants serveur. 
 
 ``` ts title="app/produits/page.tsx (Server Component)"
 import { prisma } from "@/lib/prisma";
@@ -38,38 +35,20 @@ export default async function ProduitsPage() {
 }
 ```
 
-Remarquez que le composant est une fonction `async`. Les Server Components peuvent être asynchrones, ce qui permet d'utiliser `await` directement dans le composant.
 
 ## Client Components
 
-Les Client Components s'exécutent dans le navigateur. Ils sont nécessaires pour :
+Les composantes client roulent dans le navigateur. Nécessaires si on veut utiliser les hooks React, gérer des événements ou utiliser des API du navigateur (témoins et autres...)
 
-- Utiliser les hooks React (`useState`, `useEffect`, etc.)
-- Gérer les événements utilisateur (`onClick`, `onChange`, etc.)
-- Utiliser les API du navigateur (`localStorage`, `window`, etc.)
-
-Pour déclarer un Client Component, ajoutez la directive `"use client"` au début du fichier :
+Pour indiquer à Next.JS que le composant est client, mettre `"use client"` au début du fichier :
 
 ``` ts title="app/produits/compteur.tsx"
 --8<-- "next-routage/app/produits/compteur.tsx"
 ```
 
-## Quand utiliser l'un ou l'autre
-
-| Besoin | Server Component | Client Component |
-|---|---|---|
-| Accéder à la base de données | :white_check_mark: | :x: |
-| Garder des secrets (clés API) | :white_check_mark: | :x: |
-| Réduire le JavaScript client | :white_check_mark: | :x: |
-| Utiliser `useState`, `useEffect` | :x: | :white_check_mark: |
-| Gérer des événements (`onClick`) | :x: | :white_check_mark: |
-| Utiliser les API du navigateur | :x: | :white_check_mark: |
-
-**Règle générale** : utilisez les Server Components par défaut. Ajoutez `"use client"` seulement lorsque vous avez besoin d'interactivité ou de hooks React.
-
 ## Composition : Server et Client ensemble
 
-Un pattern courant est d'avoir un Server Component parent qui passe des données à un Client Component enfant :
+Les composants serveurs et clients peuvent être utilisées en même temps dans une page. Le truc est d'isoler la partie interactive de la page dans un composant client et d'instancier ce dernier dans la page serveur.
 
 ``` ts title="app/produits/page.tsx (Server Component parent)"
 import { prisma } from "@/lib/prisma";
@@ -118,8 +97,6 @@ export default function ListeProduits({ produits }: { produits: Produit[] }) {
   );
 }
 ```
-
-Dans cet exemple, les données sont chargées sur le serveur (pas de requête API visible par le client), puis le Client Component ajoute l'interactivité (barre de recherche).
 
 !!! manuel
     [Server Components - Documentation Next.js](https://nextjs.org/docs/app/building-your-application/rendering/server-components)

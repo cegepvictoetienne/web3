@@ -14,7 +14,11 @@ axios.get('https://bieres.profinfo.ca/api/bieres').then((response) => {
 
 ## Le problème : trop d'appels à l'API
 
-Lorsqu'on connecte un champ de recherche à un API, chaque frappe de clavier déclenche un appel. Si l'utilisateur tape « bière », ça génère 5 appels : `b`, `bi`, `biè`, `bièr`, `bière`.
+Imaginez un champ de recherche où on désire que les résultats apparaîssent dès que l'utilisateur entre ses termes de recherche. On peut penser que simplement se connecter à onChange du champ de recherche et de faire l'appel de l'API serait suffisant, mais un problème survient rapidement : à chaque touche pressée, l'évènement onChange se déclenche, faisant un appel à l'API. 
+
+Exemple : 
+
+ Si l'utilisateur tape « bière », ça génère 5 appels : `b`, `bi`, `biè`, `bièr`, `bière`.
 
 ``` tsx title="SearchBar.tsx"
 // Problème : appel à chaque caractère tapé
@@ -23,7 +27,6 @@ function SearchBar() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setQuery(e.target.value);
-    // Cet appel se fait à chaque frappe!
     axios.get(`/api/bieres?q=${e.target.value}`).then(/* ... */);
   }
 
@@ -33,13 +36,10 @@ function SearchBar() {
 
 ## L'anti-rebond (debounce)
 
-L'**anti-rebond** est une technique qui attend que l'utilisateur arrête de taper pendant un certain délai avant de déclencher l'appel. Si l'utilisateur tape dans ce délai, le minuteur repart à zéro.
+Une technique simple a été développée pour réduire le nombre d'appel à l'API. C'est l'anti-rebond. L'idée est d'attendre quelques millisecondes après un évènement onChange et si aucun autre changement se produit, faire l'appel de l'API. Ça marche la plupart du temps, car une personne moyenne prend moins d'une seconde pour entrer une lettre. 
 
-``` 
-Utilisateur tape : b → bi → biè → bièr → bière
-                   ↑    ↑    ↑     ↑      ↑
-                   ⏱️  ⏱️reset ⏱️reset  ⏱️reset  ✅ appel après 500ms
-```
+Donc, au lieu de faire l'appel directement de l'API dans le onChange, on démarre un minuteur qui fait l'appel dans 500 millisecondes. Si une autre touche est pressée, on annule le minuteur et on en relance un autre. 
+
 
 ## Implémenter l'anti-rebond avec useEffect
 
@@ -88,45 +88,5 @@ function SearchBar() {
 }
 ```
 
-Le secret est dans la **fonction de ménage** : chaque fois que `query` change, React annule le `setTimeout` précédent avant d'en créer un nouveau. L'appel API ne part que si 500ms s'écoulent sans changement.
-
-## Extraire dans un hook personnalisé
-
-Si plusieurs composants ont besoin d'anti-rebond, on peut l'extraire dans un hook réutilisable :
-
-``` tsx title="hooks/useDebounce.ts"
-import { useState, useEffect } from 'react';
-
-function useDebounce<T>(valeur: T, delai: number): T {
-  const [valeurDebouncee, setValeurDebouncee] = useState(valeur);
-
-  useEffect(() => {
-    const minuteur = setTimeout(() => {
-      setValeurDebouncee(valeur);
-    }, delai);
-
-    return () => clearTimeout(minuteur);
-  }, [valeur, delai]);
-
-  return valeurDebouncee;
-}
-```
-
-``` tsx title="SearchBar.tsx"
-function SearchBar() {
-  const [query, setQuery] = useState('');
-  const queryDebouncee = useDebounce(query, 500);
-
-  useEffect(() => {
-    if (queryDebouncee.trim() === '') return;
-
-    axios.get(`/api/bieres?q=${queryDebouncee}`).then((response) => {
-      // ...
-    });
-  }, [queryDebouncee]); // L'appel ne se fait que quand la valeur debounced change
-
-  return <input value={query} onChange={(e) => setQuery(e.target.value)} />;
-}
-```
-
+Le secret est dans la fonction de ménage (celle retounée par le useEffect) : chaque fois que `query` change, React annule le `setTimeout` précédent avant d'en créer un nouveau. L'appel API ne part que si 500ms s'écoulent sans changement.
 

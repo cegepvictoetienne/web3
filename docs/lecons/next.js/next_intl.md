@@ -2,11 +2,7 @@
 
 ## Pourquoi next-intl ?
 
-Dans un projet **Next.js**, la bibliothèque `react-intl` ne tire pas parti des fonctionnalités du framework comme le routage par langue dans l'URL ou les Server Components. `next-intl` est conçue spécifiquement pour Next.js et offre :
-
-- Un routage automatique par langue dans l'URL (`/fr/...`, `/en/...`)
-- La compatibilité avec les **Server Components** (pas de hook client obligatoire)
-- Une API très proche de `react-intl`
+Je vous ai montré dans la première partie du cours que pour rendre multilingue une application React, le module react-intl est très pratique. Cependant, react-intl n'est pas idéal dans l'environnement Next.JS. C'est pour ça que je vous parle maintenant de son équivalent, next-intl.
 
 !!! manuel
     [next-intl - Documentation](https://next-intl.dev/docs/getting-started/app-router)
@@ -23,14 +19,14 @@ Voici la structure de fichiers à mettre en place :
 
 ```
 ├── message/
-│   ├── fr.json          ← traductions françaises
-│   └── en.json          ← traductions anglaises
+│   ├── fr.json         
+│   └── en.json          
 ├── i18n/
-│   ├── routing.ts   ← configuration des langues et de la langue par défaut
-│   └── request.ts   ← chargement des messages côté serveur
-├── proxy.ts     ← redirections automatiques selon la langue
+│   ├── routing.ts   
+│   └── request.ts   
+├── proxy.ts     
 ├── app/
-│   └── [locale]/    ← segment dynamique pour la langue
+│   └── [locale]/    
 │       ├── layout.tsx
 │       └── page.tsx
 ```
@@ -59,7 +55,7 @@ Voici la structure de fichiers à mettre en place :
 }
 ```
 
-Idéalement, la création du fichier de traduction suivra la structure de votre projet. Par exemple, si vous avez une composante qui liste les billets vous pourrez avoir ceci dans votre fichier de traduction :  
+Pensez à la structure JSON du fichier de message comme étant la structure de l'application. Par exemple, si vous avez une composante qui liste les billets vous pourrez avoir ceci dans votre fichier de traduction :  
 
 ``` json title="messages/fr.json"
 {
@@ -193,9 +189,6 @@ export default function MonComposant() {
   return <p>{t('app.titre')}</p>;
 }
 ```
-
-!!! note
-    `useTranslations` fonctionne à la fois dans les Server Components et les Client Components.
 
 ## Message avec variable
 

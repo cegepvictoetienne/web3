@@ -2,23 +2,18 @@
 
 ## Qu'est-ce que Next.js
 
-Next.js est un framework basé sur React qui permet de créer des applications web complètes. Contrairement à React seul (qui génère une application monopage, ou SPA), Next.js offre le **rendu côté serveur** (SSR), la **génération statique** (SSG), le routage basé sur les fichiers et bien plus.
+Depuis quelques années, les créateurs de React ont créé ce qui s'appelle des RSC (React Server Components). L'idée de ça est de générer le HTML du côté serveur. Next.js est une implémentation de RSC venant de la compagnie Vercel.
 
-### Pourquoi utiliser Next.js plutôt que React seul?
 
-| Caractéristique | React (Vite) | Next.js |
-|---|---|---|
-| Rendu | Côté client seulement (SPA) | Côté serveur et client |
-| HTML initial | Un seul `&lt;div id="root"&gt;` vide | HTML complet généré par le serveur |
-| Routage | Bibliothèque externe (React Router) | Intégré (basé sur les fichiers) |
-| API Backend | Serveur séparé requis | Route Handlers intégrés |
-| SEO | Difficile (contenu généré par JavaScript) | Excellent (HTML pré-rendu) |
+!!! manuel
+    [Documentation Next.js](https://nextjs.org/docs)
+
 
 ### Différence dans le HTML généré
 
-Avec React (Vite), le navigateur reçoit un HTML presque vide. Tout le contenu est généré par JavaScript côté client :
+Avec React (Vite), le navigateur reçoit un HTML pratiquement vide. Tout le contenu est généré par JavaScript dans le navigateur :
 
-``` html title="index.html (React avec Vite)"
+``` html title="index.html"
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
@@ -37,18 +32,17 @@ Avec Next.js, le serveur génère le HTML complet avant de l'envoyer au navigate
 </body>
 ```
 
-!!! manuel
-    [Documentation officielle Next.js](https://nextjs.org/docs)
+
 
 ## Création d'un projet
 
-Pour créer un nouveau projet Next.js, exécutez la commande suivante :
+Pour créer un nouveau projet Next.js, faire cette commande :
 
 ``` nodejsrepl title="console"
 npx create-next-app@latest
 ```
 
-L'outil vous posera quelques questions. Choisissez les options recommandées par défaut :
+Voici les options recommandées :
 
 ``` nodejsrepl title="console"
 ? Would you like to use the recommended Next.js defaults? › - Use arrow-keys. Return to submit.
@@ -85,9 +79,9 @@ mon-projet/
 
 ## Les fichiers importants
 
-### layout.tsx - Le gabarit racine
+### layout.tsx - L'apparence globale de l'application Web  
 
-Le fichier `layout.tsx` est le gabarit principal de l'application. Il enveloppe toutes les pages et contient la structure HTML de base (`&lt;html&gt;` et `&lt;body&gt;`).
+Le fichier `layout.tsx` décrit l'apparence de l'application. Il contient la structure HTML de base pour toutes les pages (`<html>` et `<body>`).
 
 ``` ts title="app/layout.tsx"
 --8<-- "next-intro/app/layout.tsx"
@@ -95,9 +89,9 @@ Le fichier `layout.tsx` est le gabarit principal de l'application. Il enveloppe 
 
 Points importants :
 
-- L'objet `metadata` permet de définir le titre et la description de la page (balises `&lt;title&gt;` et `&lt;meta&gt;`).
+- `metadata` permet de définir le titre et la description de la page (balises `<title>` et `<meta>`).
 - La propriété `children` représente le contenu de la page active.
-- Ce layout s'applique à **toutes les pages** de l'application.
+- La disposition s'applique à **toutes les pages** de l'application.
 
 ### page.tsx - La page d'accueil
 
@@ -128,19 +122,7 @@ export const metadata: Metadata = {
 };
 ```
 
-Ces métadonnées sont automatiquement ajoutées aux balises `&lt;head&gt;` du HTML généré. Chaque page peut définir ses propres métadonnées qui remplaceront celles du layout parent.
+Ces métadonnées sont automatiquement ajoutées à `<head>` du HTML. 
 
 !!! manuel
     [Metadata - Documentation Next.js](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)
-
-## Lancer le serveur de développement
-
-Pour démarrer le serveur de développement :
-
-``` nodejsrepl title="console"
-npm run dev
-```
-
-L'application sera accessible à l'adresse `http://localhost:3000`.
-
-Les modifications apportées aux fichiers seront automatiquement reflétées dans le navigateur grâce au **rechargement à chaud** (Hot Module Replacement).

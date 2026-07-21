@@ -2,12 +2,11 @@
 
 ## Générer un projet en React
 
-Il y a plusieurs Générateur d’applications React qui permettent de générer la structure de base recommandée en JavaScript ou TypeScript.
+Pour la première partie du cours, nous allons utiliser Vite comme moteur de nos applications React.  
 
 Voici comment générer l’application :
 
-1. Situez vous dans le dossier où vous désirez créer l’application (le dossier de l’application sera automatiquement créé à la prochaine étape)
-1. Exécutez la commande de création d’application :
+1. Dans le dossier où vous désirez créer l’application, exécutez la commande de création d’application :
    ```nodejsrepl title="console"
    npm create vite@latest
    ```
@@ -85,7 +84,8 @@ Pour l'installer : [React Developer Tools pour Chrome](https://chrome.google.com
 
 ## Le JSX
 
-Le JSX (JavaScript XML) est une extension de syntaxe pour JavaScript qui permet d'écrire du code ressemblant à du HTML directement dans les fichiers TypeScript/JavaScript. React utilise le JSX pour décrire l'interface utilisateur.
+Les développeurs de React ont développé un language qui permet combiner le JavaScript et le HTML en un. 
+
 
 ```tsx title="Exemple.tsx"
 function Exemple() {
@@ -119,15 +119,6 @@ function Exemple() {
 
 ### Différences entre JSX et HTML
 
-Le JSX ressemble au HTML, mais il y a quelques différences importantes :
-
-| HTML | JSX |
-|------|-----|
-| `class="..."` | `className="..."` |
-| `for="..."` | `htmlFor="..."` |
-| `<input>` | `<input />` (balise auto-fermante obligatoire) |
-| Attributs en kebab-case | Attributs en camelCase |
-
 ```tsx title="Exemple.tsx"
 function Exemple() {
   return (
@@ -138,6 +129,8 @@ function Exemple() {
   );
 }
 ```
+
+Notez que le `<div>` utilise la variable className au lieu de class comme dans le HTML ordinaire. C'est une limitation du JSX, car class est un mot clé réservé à JavaScript.  
 
 ### Un seul élément racine
 
@@ -205,9 +198,6 @@ function Notification({ nombreMessages }: { nombreMessages: number }) {
 }
 ```
 
-!!! warning "Attention"
-    Évitez d'utiliser `&&` avec un nombre comme condition. Si `nombreMessages` vaut `0`, React affichera le chiffre `0` au lieu de ne rien afficher. Préférez une comparaison explicite comme `nombreMessages > 0`.
-
 !!! manuel
     [Rendu conditionnel - Documentation officielle React](https://react.dev/learn/conditional-rendering)
 
@@ -252,9 +242,6 @@ function ListeProduits({ produits }: { produits: Produit[] }) {
   );
 }
 ```
-
-!!! warning "Attention"
-    N'utilisez pas l'index du tableau comme `key` si la liste peut être réordonnée ou filtrée. Préférez un identifiant unique provenant des données (ex. : `id`).
 
 ### Filtrer une liste
 

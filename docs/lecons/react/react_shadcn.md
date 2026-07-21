@@ -1,20 +1,13 @@
 # Composantes UI : shadcn/ui
 
-shadcn/ui est une collection de composantes réutilisables et accessibles construites avec [Radix UI](https://www.radix-ui.com/) et Tailwind CSS. Contrairement aux librairies de composantes traditionnelles, shadcn/ui **ne s'installe pas comme un package npm** — les composantes sont copiées directement dans votre projet, ce qui vous donne un contrôle total sur leur code source.
-
-| Avantage | Description |
-|---|---|
-| **Code dans votre projet** | Les composantes font partie de votre code source, vous pouvez les modifier librement |
-| **Accessibilité (ARIA)** | Construit sur Radix UI, chaque composante respecte les standards d'accessibilité |
-| **Tailwind CSS natif** | Les styles utilisent vos classes Tailwind et s'adaptent à votre thème |
-| **TypeScript** | Toutes les composantes sont typées |
+Le cours de développement Web 3 n'a pas un focus sur l'utilisation de CSS comme le cours de design Web. Pour aider à faire des pages Web avec un look intéressant, je vais vous présenter une collections de composantes, qui utilise différentes technologies, dont TailWindCSS pour avoir un look moderne et épuré.
 
 !!! manuel
     [Documentation officielle shadcn/ui](https://ui.shadcn.com/)
 
 # Prérequis
 
-shadcn/ui nécessite **Tailwind CSS**. Assurez-vous d'avoir suivi la [leçon sur Tailwind CSS](react_tw.md) avant de continuer.
+shadcn/ui nécessite **Tailwind CSS**. Bien préparer votre application avant de continuer...  
 
 # Installation de shadcn  
 
@@ -101,8 +94,6 @@ L'assistant interactif vous posera quelques questions. Voici les choix recommand
 
 ```
 
-Cette commande crée un fichier `components.json` de configuration et ajoute les styles de base dans votre fichier CSS.
-
 ## 4. Ajouter des composantes
 
 Chaque composante s'installe séparément avec la commande `add`. Le code source de la composante est copié dans `src/components/ui/` :
@@ -115,12 +106,6 @@ npx shadcn@latest add input
 npx shadcn@latest add card
 npx shadcn@latest add badge
 ```
-
-!!! tip
-    Vous pouvez ajouter plusieurs composantes d'un seul coup :
-    ``` nodejsrepl title="console"
-    npx shadcn@latest add button card badge input field navigation-menu
-    ```
 
 # Barre de navigation
 
@@ -201,18 +186,6 @@ export function NavBar() {
   )
 }
 ```
-
-## Éléments clés de NavigationMenu
-
-| Composante | Rôle |
-|---|---|
-| `NavigationMenu` | Conteneur principal |
-| `NavigationMenuList` | Liste des éléments du menu |
-| `NavigationMenuItem` | Un élément du menu |
-| `NavigationMenuTrigger` | Bouton qui ouvre un sous-menu |
-| `NavigationMenuContent` | Contenu du sous-menu déroulant |
-| `NavigationMenuLink` | Lien de navigation |
-| `navigationMenuTriggerStyle()` | Fonction qui retourne les classes de style d'un bouton de navigation |
 
 !!! manuel
     [NavigationMenu — shadcn/ui](https://ui.shadcn.com/docs/components/navigation-menu)
@@ -343,28 +316,6 @@ export function FormulaireContact() {
 }
 ```
 
-## Flux de validation du formulaire
-
-```mermaid
-graph LR
-    A[Utilisateur soumet] --> B{Validation Zod}
-    B -->|Succès| C[onSubmit appelé]
-    B -->|Échec| D[Messages d'erreur affichés]
-    D --> E[Utilisateur corrige]
-    E --> A
-```
-
-## Éléments clés du formulaire
-
-| Composante | Rôle |
-|---|---|
-| `Controller` | Connecte un champ au formulaire via `control` et `name` |
-| `Field` | Regroupe le label, le champ et le message d'erreur ; reçoit `data-invalid` pour le style |
-| `FieldLabel` | Étiquette du champ, liée au champ via `htmlFor` |
-| `FieldError` | Affiche automatiquement le message d'erreur Zod |
-| `fieldState.invalid` | Booléen indiquant si le champ est en erreur |
-| `fieldState.error` | Objet contenant le message d'erreur |
-
 !!! manuel
     [Form — shadcn/ui](https://ui.shadcn.com/docs/forms/react-hook-form)
 
@@ -490,17 +441,6 @@ export function GrilleProduits() {
   )
 }
 ```
-
-## Éléments clés de Card
-
-| Composante | Rôle |
-|---|---|
-| `Card` | Conteneur principal avec bordure et ombre |
-| `CardHeader` | Zone supérieure (titre, description) |
-| `CardTitle` | Titre de la carte |
-| `CardDescription` | Texte descriptif secondaire |
-| `CardContent` | Corps de la carte |
-| `CardFooter` | Zone inférieure (actions) |
 
 !!! manuel
     [Card — shadcn/ui](https://ui.shadcn.com/docs/components/card)

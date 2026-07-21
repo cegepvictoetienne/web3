@@ -1,16 +1,15 @@
 # useReducer
 
-`useReducer` est un hook React qui permet de gérer des états complexes. C'est une alternative à `useState` lorsque la logique de mise à jour implique plusieurs valeurs liées ou plusieurs types d'actions différentes.
+
+Lorsque votre état est complexe (un objet avec beaucoup de propriétés, une liste d'objets, etc...) et que vous avez potentiellement beaucoup d'actions à faire sur cet état, la gestion de l'état un peu éparpillée dans votre application peut rendre le tout fragile. Le hook `useReducer` a été pensé pour aider avec ce genre de complexité. 
 
 !!! manuel
     [useReducer - Documentation](https://react.dev/reference/react/useReducer)
 
 ## Quand utiliser useReducer?
 
-- L'état suivant dépend de l'état précédent
-- Plusieurs actions différentes modifient l'état
-- La logique de mise à jour est complexe ou imbriquée
-- Vous souhaitez centraliser et tester la logique de l'état séparément
+Il est recommandé d'utiliser un réducteur lorsque l'état suivant est une modification de l'état précédent, lorsqu'il y a plusieurs actions possibles sur l'état, lorsque la logique est complexe ou lorsque vous souhaiter centraliser la gestion complète de l'état.
+
 
 ## Syntaxe
 
@@ -22,7 +21,7 @@ const [state, dispatch] = useReducer(reducer, etatInitial);
 
 ### Le réducteur (reducer)
 
-C'est une **fonction pure** qui prend l'état actuel et une action, puis retourne le nouvel état. Elle ne doit **jamais** modifier directement l'état, mais toujours retourner un nouvel objet.
+C'est une fonction qui prend l'état actuel et une action, puis retourne le nouvel état. Elle ne doit pas modifier directement l'état, mais toujours retourner un nouvel objet. (Voir la leçon sur la mécanique de React)
 
 ``` ts
 function reducer(state: State, action: Action): State {
@@ -161,20 +160,9 @@ function ListeTaches() {
 export default ListeTaches;
 ```
 
-## useState vs useReducer
-
-| Situation | useState | useReducer |
-|-----------|:--------:|:----------:|
-| État simple (nombre, chaîne, booléen) | ✅ | |
-| Plusieurs états indépendants | ✅ | |
-| État complexe (objets imbriqués) | | ✅ |
-| Plusieurs actions qui modifient l'état | | ✅ |
-| Logique facile à tester isolément | | ✅ |
-| L'état suivant dépend du précédent | | ✅ |
-
 ## useReducer avec useContext
 
-`useReducer` et `useContext` s'associent naturellement pour créer un état global accessible partout dans l'application, tout en gardant la logique centralisée.
+Vous pouvez facilement combiner `useReducer` et `useContext`. 
 
 ``` ts title="taches.context.tsx"
 import { createContext, useContext, useReducer } from 'react';
@@ -258,82 +246,5 @@ function ListeTaches() {
 }
 ```
 
-!!! tip
-    En combinant `useReducer` et `useContext`, vous obtenez un patron de gestion d'état qui ressemble à Redux, mais sans dépendance externe.
-
 ## useReducer avec Immer
-
-La règle principale du réducteur est de ne **jamais** muter l'état directement, mais toujours retourner un nouvel objet. Avec des états complexes et imbriqués, cela force l'utilisation de nombreux spread operators (`...`) qui alourdissent le code.
-
-[Immer](../outils/immer.md) résout ce problème en permettant d'écrire les mutations directement sur un objet `draft`, tout en produisant un nouvel état immuable en arrière-plan.
-
-### Installation
-
-``` nodejsrepl title="console"
-npm install immer
-```
-
-### Comparaison sans et avec Immer
-
-Prenons le réducteur de la liste de tâches :
-
-=== "Sans Immer"
-
-    ``` ts
-    function reducer(state: Tache[], action: Action): Tache[] {
-      switch (action.type) {
-        case 'ajouter':
-          return [...state, { id: Date.now(), texte: action.payload, complete: false }];
-        case 'completer':
-          return state.map(t =>
-            t.id === action.payload ? { ...t, complete: !t.complete } : t
-          );
-        case 'supprimer':
-          return state.filter(t => t.id !== action.payload);
-        default:
-          return state;
-      }
-    }
-    ```
-
-=== "Avec Immer"
-
-    ``` ts
-    import { produce } from 'immer';
-
-    const reducer = produce((draft: Tache[], action: Action) => {
-      switch (action.type) {
-        case 'ajouter':
-          draft.push({ id: Date.now(), texte: action.payload, complete: false });
-          break;
-        case 'completer': {
-          const tache = draft.find(t => t.id === action.payload);
-          if (tache) tache.complete = !tache.complete;
-          break;
-        }
-        case 'supprimer': {
-          const index = draft.findIndex(t => t.id === action.payload);
-          if (index !== -1) draft.splice(index, 1);
-          break;
-        }
-      }
-    });
-    ```
-
-### Utilisation avec useReducer
-
-Le réducteur produit par Immer s'utilise exactement comme un réducteur normal :
-
-``` ts
-function ListeTaches() {
-  const [taches, dispatch] = useReducer(reducer, []);
-
-  // dispatch fonctionne exactement pareil
-  dispatch({ type: 'ajouter', payload: 'Faire les courses' });
-  dispatch({ type: 'completer', payload: 42 });
-  dispatch({ type: 'supprimer', payload: 42 });
-}
-```
-
-!!! tip
-    Avec Immer, on utilise `break` à la fin de chaque `case` au lieu de `return`, puisqu'on ne retourne plus un nouvel objet manuellement. Immer s'occupe de construire l'état final à partir des mutations du `draft`.
+Un bon truc pour faciliter la modification d'un état dans un réducteur et l'utilisation de [Immer](../outils/immer.md).
