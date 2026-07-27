@@ -3,7 +3,7 @@
 ## Routage basé sur l'arborescence sous app/  
 
 
-Au lieu d'un module externe comme React Router, Next.JS se fit sur la structure des répertoires sous `app/`. Chaque déssier est une partie de l'URL. (par exemple, /app/login serait l'url http:/localhost:3000/login). Next.JS lit le ficher `page.tsx` pour rendre le chemin accessible.
+Au lieu d'un module externe comme React Router, Next.JS se fit sur la structure des répertoires sous `app/`. Chaque dossier est une partie de l'URL. (par exemple, /app/login serait l'url http://localhost:3000/login). Next.JS lit le fichier `page.tsx` pour rendre le chemin accessible.
 
 
 ```
@@ -58,7 +58,7 @@ Si vous voulez gérer localement les erreurs. Ce fichier doit obligatoirement ê
 --8<-- "next-routage/app/produits/error.tsx"
 ```
 
-## Routes dynamiques avec [parametre]
+## Routes dynamiques avec \[parametre\]
 
 Il arrive qu'on désire créer des pages dynamiques, accessible par un identifiant. Imaginez une page de produit qui est accessible par /produit/1234 (1234 étant le code de produit). Pour faire ça, on crée une route telle que ceci :  `app/produit/[id]/page.tsx` qui accepte n'importe quelle valeur pour `id`. 
 

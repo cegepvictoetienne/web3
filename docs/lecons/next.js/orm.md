@@ -119,23 +119,24 @@ npx prisma generate
 
 ### Configuration du client
 
-C'est recommandé de faire un singleton pour éviter les reconnections multiples lors du développement :
+Voici le code pour créer une instance de prisma en singleton, utile pour les fonctions plus bas.
 
 ``` ts title="lib/prisma.ts"
-import "dotenv/config";
+import { PrismaClient } from "@/app/generated/prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import { PrismaClient } from "./generated/prisma/client";
 
-const adapter = new PrismaMariaDb({
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-  connectionLimit: 5,
-});
-const prisma = new PrismaClient({ adapter });
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-export { prisma };
+const adapter = new PrismaMariaDb(process.env.DATABASE_URL!);
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
+
 ```
 
 ### Opérations CRUD
@@ -207,14 +208,23 @@ Après un `migrate reset`, la base de données est vide. Utilisez des données d
 
 ### Configurer le script de seed
 
-Ajoutez la configuration suivante dans votre `package.json` :
+Ajoutez la configuration suivante dans votre `prisma.config.ts` :
 
-``` json title="package.json (extrait)"
-{
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
-  }
-}
+``` json title="prisma.config.ts"
+import "dotenv/config";
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+    seed: "tsx prisma/seed.ts",
+  },
+  datasource: {
+    url: process.env["DATABASE_URL"],
+  },
+});
+
 ```
 
 ### Exécuter le seed
@@ -222,5 +232,3 @@ Ajoutez la configuration suivante dans votre `package.json` :
 ``` nodejsrepl title="console"
 npx prisma db seed
 ```
-
-Le seed est aussi exécuté automatiquement lors d'un `npx prisma migrate reset`.
