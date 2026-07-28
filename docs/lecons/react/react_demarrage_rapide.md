@@ -118,7 +118,7 @@ npx shadcn@latest add badge
 ## Installation de React Router  
 
 ``` nodejsrepl title="console"
-npm i react-router-dom
-npm i @types/react-router-dom --save-dev
+npm i react-router
+npm i @types/react-router --save-dev
 ```  
 
