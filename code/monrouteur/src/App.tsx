@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Outlet,
-  useParams,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, useParams } from 'react-router';
 
 import './App.css';
 
