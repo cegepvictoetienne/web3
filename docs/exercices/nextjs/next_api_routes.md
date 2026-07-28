@@ -1,7 +1,7 @@
 # Exercice - API Routes
 
 
-Dans le projet créé pour [Prisma ORM](next_orm.md), ajoutez une API REST :  
+Dans le projet créé pour [Prisma ORM](./next_orm.md), ajoutez une API REST :  
 
 
 - Créer `app/api/auteurs/route.ts` avec :
