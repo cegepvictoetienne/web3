@@ -22,9 +22,29 @@ Générez ensuite une clé secrète pour chiffrer les sessions :
 npx auth secret
 ```
 
-Cela ajoute automatiquement `AUTH_SECRET` dans votre fichier `.env`.
+Ajoutez  `AUTH_SECRET` dans votre fichier `.env`. (Prenez la clé générée par la commande, mais pas le *BETTER*!)
 
 ## Configuration de base
+
+### Fichier de type pour avoir l'id de l'utilisateur  
+
+``` ts title="/types/next-auth.d.ts"
+import { DefaultSession } from "next-auth"
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+    } & DefaultSession["user"]
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string
+  }
+}
+``` 
 
 ### Fichier principal d'Auth.js
 
@@ -44,17 +64,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         motDePasse: { label: "Mot de passe", type: "password" },
       },
       authorize: async (credentials) => {
-        const utilisateur = await prisma.utilisateur.findUnique({
+        const utilisateur = await prisma.utilisateurs.findFirst({
           where: { courriel: credentials.courriel as string },
         })
 
-        if (!utilisateur || !utilisateur.motDePasseHache) {
+        if (!utilisateur || !utilisateur.motdepasse) {
           return null
         }
 
         const motDePasseValide = await bcrypt.compare(
           credentials.motDePasse as string,
-          utilisateur.motDePasseHache
+          utilisateur.motdepasse
         )
 
         if (!motDePasseValide) return null
@@ -67,6 +87,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string
+      }
+      return session
+    },
+  },
 })
 ```
 
@@ -112,11 +146,11 @@ export default async function RootLayout({
 Ajoutez un modèle `Utilisateur` dans votre schéma Prisma avec un champ pour stocker le mot de passe haché :
 
 ``` prisma title="prisma/schema.prisma"
-model Utilisateur {
+model Utilisateurs {
   id               Int      @id @default(autoincrement())
   nom              String
   courriel         String   @unique
-  motDePasseHache  String?
+  motdepasse       String?
   creeLe           DateTime @default(now())
 }
 ```
@@ -138,18 +172,18 @@ export async function inscrireUtilisateur(formData: FormData) {
   const courriel = formData.get("courriel") as string
   const motDePasse = formData.get("motDePasse") as string
 
-  const existant = await prisma.utilisateur.findUnique({
+  const existant = await prisma.utilisateurs.findFirst({
     where: { courriel },
   })
 
   if (existant) {
-    throw new Error("Un compte existe déjà avec ce courriel.")
+    redirect("/inscription?erreur=1")
   }
 
   const motDePasseHache = await bcrypt.hash(motDePasse, 10)
 
-  await prisma.utilisateur.create({
-    data: { nom, courriel, motDePasseHache },
+  await prisma.utilisateurs.create({
+    data: { nom, courriel, motdepasse: motDePasseHache },
   })
 
   redirect("/connexion")
@@ -157,28 +191,125 @@ export async function inscrireUtilisateur(formData: FormData) {
 ```
 
 ``` tsx title="app/inscription/page.tsx"
-import { inscrireUtilisateur } from "@/app/actions/auth.actions"
+import Link from "next/link"
 
-export default function PageInscription() {
+import { inscrireUtilisateur } from "@/app/actions/auth.actions"
+import { BoutonSoumission } from "@/components/bouton-soumission"
+import { Input } from "@/components/ui/input"
+
+export default async function PageInscription({
+  searchParams,
+}: {
+  searchParams: Promise<{ erreur?: string }>
+}) {
+  const { erreur } = await searchParams
+
   return (
-    <form action={inscrireUtilisateur}>
-      <div>
-        <label htmlFor="nom">Nom</label>
-        <input type="text" id="nom" name="nom" required />
+    <div className="flex min-h-[calc(100vh-3.5rem)] items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">
+            Créer un compte
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Inscrivez-vous pour commencer à prendre des notes.
+          </p>
+        </div>
+
+        {erreur && (
+          <p className="mt-6 rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Un compte existe déjà avec ce courriel.
+          </p>
+        )}
+
+        <form
+          action={inscrireUtilisateur}
+          className="mt-6 flex flex-col gap-4"
+        >
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="nom" className="text-sm font-medium">
+              Nom
+            </label>
+            <Input
+              type="text"
+              id="nom"
+              name="nom"
+              placeholder="Votre nom"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="courriel" className="text-sm font-medium">
+              Courriel
+            </label>
+            <Input
+              type="email"
+              id="courriel"
+              name="courriel"
+              placeholder="vous@exemple.com"
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="motDePasse" className="text-sm font-medium">
+              Mot de passe
+            </label>
+            <Input
+              type="password"
+              id="motDePasse"
+              name="motDePasse"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+          <BoutonSoumission
+            libelle="Créer un compte"
+            libelleEnCours="Création en cours..."
+          />
+        </form>
+
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Déjà un compte ?{" "}
+          <Link
+            href="/connexion"
+            className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+          >
+            Se connecter
+          </Link>
+        </p>
       </div>
-      <div>
-        <label htmlFor="courriel">Courriel</label>
-        <input type="email" id="courriel" name="courriel" required />
-      </div>
-      <div>
-        <label htmlFor="motDePasse">Mot de passe</label>
-        <input type="password" id="motDePasse" name="motDePasse" required />
-      </div>
-      <button type="submit">Créer un compte</button>
-    </form>
+    </div>
   )
 }
 ```
+
+``` tsx title="components/bouton-soumission.tsx"
+'use client';
+
+import { useFormStatus } from 'react-dom';
+
+import { Button } from '@/components/ui/button';
+
+type BoutonSoumissionProps = {
+  libelle: string;
+  libelleEnCours: string;
+};
+
+export function BoutonSoumission({
+  libelle,
+  libelleEnCours,
+}: BoutonSoumissionProps) {
+  const { pending: enCours } = useFormStatus();
+
+  return (
+    <Button type="submit" size="lg" className="w-full" disabled={enCours}>
+      {enCours ? libelleEnCours : libelle}
+    </Button>
+  );
+}
+
+```
+
 
 ## Connexion
 
