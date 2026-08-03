@@ -24,10 +24,10 @@ Cours|Date|Sujet|Exercice
 21|2026-11-12 08:15:00|[Routes API](lecons/next.js/api_routes.md)|[Routes API](exercices/nextjs/next_api_routes.md)
 22|2026-11-17 14:15:00|[Server Actions et formulaires](lecons/next.js/server_actions.md)|[Server Actions](exercices/nextjs/next_server_actions.md)
 23|2026-11-19 08:15:00|[Internationalisation avec Next.js](lecons/next.js/next_intl.md)|[Internationalisation](exercices/nextjs/next_intl_exercice.md)
-24|2026-11-24 14:15:00|[React dans Azure](lecons/deploiement/azure_react.md)|
-25|2026-11-26 08:15:00|Projet formatif next.js|
-26|2026-12-01 14:15:00|Projet formatif next.js|
-27|2026-12-03 08:15:00|Projet formatif next.js|
+24|2026-11-24 14:15:00|[Better Auth - courriel et mot de passe](lecons/next.js/auth_courriel.md)|[Better Auth - courriel et mot de passe](exercices/nextjs/auth_courriel.md)
+25|2026-11-26 08:15:00|[Better Auth - oauth et GitHub](lecons/next.js/auth_oauth.md)|[Better Auth - oauth et GitHub](exercices/nextjs/auth_oauth.md)
+26|2026-12-01 14:15:00|[Better Auth - protection de route](lecons/next.js/auth_protection.md)|[Better Auth - protection de route](exercices/nextjs/auth_protection.md)
+27|2026-12-03 08:15:00|[React dans Azure](lecons/deploiement/azure_react.md)|
 28|2026-12-08 14:15:00|Projet formatif next.js|
 29|2026-12-10 08:15:00|Pratique d'examen final|
 30|2026-12-15 14:15:00|Retour sur pratique d'examen final|

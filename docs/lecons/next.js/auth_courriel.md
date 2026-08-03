@@ -1,194 +1,144 @@
-# Authentification avec Auth.js — Courriel et mot de passe
+# Authentification avec Better Auth — Courriel et mot de passe
 
-## Qu'est-ce qu'Auth.js
+## Qu'est-ce que Better Auth
 
-L'authentification dans une application Web est essentielle. Les défis sont de taille pour créer un système bien protégé avec une sécurité adéquate. Il ne faut pas réinventer la roue, alors utilisons plutôt un module très utilisé par les programmeurs Next.Js, `Auth.js`.  
+Toute application se doit d'être bien protégée. Pour une appli Web faite avec Next.js, utilisez le module Better Auth. (Pourquoi réinventer la roue quand um module gratuit fait l'affaire!)   
 
 !!! manuel
-    [Documentation officielle Auth.js](https://authjs.dev)  
-    [Guide Next.js - Auth.js](https://authjs.dev/getting-started/installation?framework=next.js)
+    [Documentation officielle Better Auth](https://www.better-auth.com/docs)  
+    [Guide Next.js - Better Auth](https://www.better-auth.com/docs/integrations/next)
 
 ## Installation
 
 ``` nodejsrepl title="console"
-npm install next-auth@beta
-npm install bcryptjs
-npm install --save-dev @types/bcryptjs
+npm install better-auth
+npm install @better-auth/prisma-adapter
 ```
 
 Générez ensuite une clé secrète pour chiffrer les sessions :
 
 ``` nodejsrepl title="console"
-npx auth secret
+npx auth@latest secret
 ```
 
-Ajoutez  `AUTH_SECRET` dans votre fichier `.env`. (Prenez la clé générée par la commande, mais pas le *BETTER*!)
+Ajoutez `BETTER_AUTH_SECRET` dans votre fichier `.env` avec la clé générée, ainsi que `BETTER_AUTH_URL`, l'adresse de votre application :
+
+``` title=".env"
+BETTER_AUTH_SECRET="généré-par-npx-auth-secret"
+BETTER_AUTH_URL="http://localhost:3000"
+DATABASE_URL="mysql://..."
+```
 
 ## Configuration de base
 
-### Fichier de type pour avoir l'id de l'utilisateur  
+### Fichier principal de Better Auth
 
-``` ts title="/types/next-auth.d.ts"
-import { DefaultSession } from "next-auth"
+Créez le fichier `lib/auth.ts` :
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string
-    } & DefaultSession["user"]
-  }
-}
+``` ts title="lib/auth.ts"
+import { betterAuth } from "better-auth"
+import { prismaAdapter } from "better-auth/adapters/prisma"
+import { nextCookies } from "better-auth/next-js"
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string
-  }
-}
-``` 
-
-### Fichier principal d'Auth.js
-
-Créez le fichier `auth.ts` à la **racine du projet** (au même niveau que `app/`) :
-
-``` ts title="auth.ts"
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    Credentials({
-      credentials: {
-        courriel: { label: "Courriel", type: "email" },
-        motDePasse: { label: "Mot de passe", type: "password" },
-      },
-      authorize: async (credentials) => {
-        const utilisateur = await prisma.utilisateurs.findFirst({
-          where: { courriel: credentials.courriel as string },
-        })
-
-        if (!utilisateur || !utilisateur.motdepasse) {
-          return null
-        }
-
-        const motDePasseValide = await bcrypt.compare(
-          credentials.motDePasse as string,
-          utilisateur.motdepasse
-        )
-
-        if (!motDePasseValide) return null
-
-        return {
-          id: String(utilisateur.id),
-          name: utilisateur.nom,
-          email: utilisateur.courriel,
-        }
-      },
-    }),
-  ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-      }
-      return token
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-      }
-      return session
-    },
+export const auth = betterAuth({
+  database: prismaAdapter(prisma, {
+    provider: "mysql",
+  }),
+  emailAndPassword: {
+    enabled: true,
   },
+  plugins: [nextCookies()],
 })
 ```
 
-La fonction `authorize` reçoit les données du formulaire et doit retourner l'objet utilisateur si les identifiants sont valides, ou `null` sinon.
+Le plugiciel `nextCookies` doit toujours être le dernier de la liste des plugiciels : il permet aux appels `auth.api.signInEmail` et `auth.api.signUpEmail` faits depuis une action serveur de bien déposer le cookie de session dans le navigateur.
 
 ### Gestionnaire de route
 
-Auth.js a besoin d'une route API pour gérer les requêtes d'authentification (connexion, déconnexion, session) :
+Better Auth a besoin d'une route API pour gérer les requêtes d'authentification (connexion, déconnexion, session) :
 
-``` ts title="app/api/auth/[...nextauth]/route.ts"
-import { handlers } from "@/auth"
-export const { GET, POST } = handlers
+``` ts title="app/api/auth/[...all]/route.ts"
+import { auth } from "@/lib/auth"
+import { toNextJsHandler } from "better-auth/next-js"
+
+export const { GET, POST } = toNextJsHandler(auth)
 ```
 
-### SessionProvider dans le layout
+### Client d'authentification
 
-Pour que les composants clients puissent accéder à la session, ajoutez `SessionProvider` dans votre layout racine :
+Les composants clients passent par un client dédié pour accéder à la session ou déclencher certaines actions :
 
-``` tsx title="app/layout.tsx"
-import { SessionProvider } from "next-auth/react"
-import { auth } from "@/auth"
+``` ts title="lib/auth-client.ts"
+import { createAuthClient } from "better-auth/react"
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const session = await auth()
-  return (
-    <html lang="fr">
-      <body>
-        <SessionProvider session={session}>
-          {children}
-        </SessionProvider>
-      </body>
-    </html>
-  )
+export const authClient = createAuthClient()
+```
+
+## Génération du schéma de base de données
+
+Better Auth gère lui-même ses tables (`user`, `session`, `account`, `verification`). Sa CLI ajoute les modèles nécessaires à votre schéma Prisma :
+
+``` nodejsrepl title="console"
+npx auth@latest generate
+```
+
+Appliquez ensuite la migration comme d'habitude :
+
+``` nodejsrepl title="console"
+npx prisma migrate dev --name better_auth
+```
+
+``` prisma title="prisma/schema.prisma (extrait généré par Better Auth)"
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      session[]
+  accounts      account[]
 }
 ```
 
-## Modèle de base de données
-
-Ajoutez un modèle `Utilisateur` dans votre schéma Prisma avec un champ pour stocker le mot de passe haché :
-
-``` prisma title="prisma/schema.prisma"
-model Utilisateurs {
-  id               Int      @id @default(autoincrement())
-  nom              String
-  courriel         String   @unique
-  motdepasse       String?
-  creeLe           DateTime @default(now())
-}
-```
-Le mot de passe doit être haché avant d'être enregistré en base de données. La bibliothèque `bcryptjs` s'en charge avec la fonction `hash`. Souvenez-vous des recommandations de votre professeur de piratage éthique?  
+Le mot de passe n'est jamais stocké dans la table `user` : il est haché (avec l'algorithme `scrypt`) et conservé dans la table `account`, associée à un fournisseur `credential`. Souvenez-vous des recommandations de votre professeur de piratage éthique — ici, c'est Better Auth qui s'en charge à votre place.
 
 ## Inscription d'un utilisateur
 
-La création de compte est une action serveur qui hache le mot de passe avant de l'enregistrer :
+La création de compte reste une action serveur, mais c'est `auth.api.signUpEmail` qui hache le mot de passe et crée l'utilisateur :
 
 ``` ts title="app/actions/auth.actions.ts"
 "use server"
 
-import { prisma } from "@/lib/prisma"
-import bcrypt from "bcryptjs"
+import { APIError } from "better-auth/api"
 import { redirect } from "next/navigation"
+
+import { auth } from "@/lib/auth"
 
 export async function inscrireUtilisateur(formData: FormData) {
   const nom = formData.get("nom") as string
   const courriel = formData.get("courriel") as string
   const motDePasse = formData.get("motDePasse") as string
 
-  const existant = await prisma.utilisateurs.findFirst({
-    where: { courriel },
-  })
-
-  if (existant) {
-    redirect("/inscription?erreur=1")
+  try {
+    await auth.api.signUpEmail({
+      body: { name: nom, email: courriel, password: motDePasse },
+    })
+  } catch (error) {
+    if (error instanceof APIError) {
+      redirect("/inscription?erreur=1")
+    }
+    throw error
   }
-
-  const motDePasseHache = await bcrypt.hash(motDePasse, 10)
-
-  await prisma.utilisateurs.create({
-    data: { nom, courriel, motdepasse: motDePasseHache },
-  })
 
   redirect("/connexion")
 }
 ```
+
+`signUpEmail` refuse la création si le courriel existe déjà et lève une `APIError` : plus besoin de vérifier soi-même l'existence de l'utilisateur avant de l'insérer.
 
 ``` tsx title="app/inscription/page.tsx"
 import Link from "next/link"
@@ -313,12 +263,11 @@ export function BoutonSoumission({
 
 ## Connexion
 
-Le formulaire de connexion appelle `signIn` importé de `@/auth` dans une action serveur :
-
 ``` tsx title="app/connexion/page.tsx"
-import { signIn } from "@/auth"
-import { AuthError } from "next-auth"
+import { APIError } from "better-auth/api"
 import { redirect } from "next/navigation"
+
+import { auth } from "@/lib/auth"
 
 export default function PageConnexion({
   searchParams,
@@ -334,17 +283,19 @@ export default function PageConnexion({
         action={async (formData: FormData) => {
           "use server"
           try {
-            await signIn("credentials", {
-              courriel: formData.get("courriel"),
-              motDePasse: formData.get("motDePasse"),
-              redirectTo: "/tableau-de-bord",
+            await auth.api.signInEmail({
+              body: {
+                email: formData.get("courriel") as string,
+                password: formData.get("motDePasse") as string,
+              },
             })
           } catch (error) {
-            if (error instanceof AuthError) {
+            if (error instanceof APIError) {
               redirect("/connexion?erreur=1")
             }
             throw error
           }
+          redirect("/tableau-de-bord")
         }}
       >
         <div>
@@ -364,19 +315,31 @@ export default function PageConnexion({
 
 ## Déconnexion
 
+`signOut` doit être appelé depuis un composant client — les méthodes de `authClient` reposent sur `fetch` et ne peuvent pas s'exécuter dans une action serveur :
+
 ``` tsx title="components/BoutonDeconnexion.tsx"
-import { signOut } from "@/auth"
+"use client"
+
+import { useRouter } from "next/navigation"
+
+import { authClient } from "@/lib/auth-client"
+import { Button } from "@/components/ui/button"
 
 export function BoutonDeconnexion() {
+  const router = useRouter()
+
   return (
-    <form
-      action={async () => {
-        "use server"
-        await signOut({ redirectTo: "/" })
-      }}
+    <Button
+      onClick={() =>
+        authClient.signOut({
+          fetchOptions: {
+            onSuccess: () => router.push("/"),
+          },
+        })
+      }
     >
-      <button type="submit">Se déconnecter</button>
-    </form>
+      Se déconnecter
+    </Button>
   )
 }
 ```
@@ -386,10 +349,12 @@ export function BoutonDeconnexion() {
 ### Dans un composant serveur
 
 ``` tsx title="app/tableau-de-bord/page.tsx"
-import { auth } from "@/auth"
+import { headers } from "next/headers"
+
+import { auth } from "@/lib/auth"
 
 export default async function TableauDeBord() {
-  const session = await auth()
+  const session = await auth.api.getSession({ headers: await headers() })
 
   return (
     <div>
@@ -406,28 +371,28 @@ export default async function TableauDeBord() {
 ``` tsx title="components/InfoUtilisateur.tsx"
 "use client"
 
-import { useSession } from "next-auth/react"
+import { authClient } from "@/lib/auth-client"
 
 export function InfoUtilisateur() {
-  const { data: session, status } = useSession()
+  const { data: session, isPending } = authClient.useSession()
 
-  if (status === "loading") return <p>Chargement...</p>
-  if (status === "unauthenticated") return <p>Non connecté</p>
+  if (isPending) return <p>Chargement...</p>
+  if (!session) return <p>Non connecté</p>
 
-  return <p>Bonjour, {session?.user?.name}</p>
+  return <p>Bonjour, {session.user.name}</p>
 }
 ```
 
 | Propriété | Valeurs possibles | Description |
 |---|---|---|
-| `status` | `"loading"` | La session est en cours de chargement |
-| `status` | `"authenticated"` | L'utilisateur est connecté |
-| `status` | `"unauthenticated"` | Aucun utilisateur connecté |
-| `data` | objet `Session` ou `null` | Les données de la session |
+| `isPending` | `true` / `false` | La session est en cours de chargement |
+| `data` | objet `{ user, session }` ou `null` | Les données de la session, `null` si non connecté |
+| `error` | objet d'erreur ou `null` | Erreur survenue lors de la récupération de la session |
 
 ## Variables d'environnement
 
 ``` title=".env"
-AUTH_SECRET="généré-par-npx-auth-secret"
+BETTER_AUTH_SECRET="généré-par-npx-auth-secret"
+BETTER_AUTH_URL="http://localhost:3000"
 DATABASE_URL="mysql://..."
 ```
