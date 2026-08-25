@@ -3,8 +3,8 @@
 - Créer un dossier exercice_lodash  
 - Initialiser TypeScript  
 - Initialiser Node  
-- Installer nodemon, concurrently et lodash  
-- Créer un script dans package.json pour compiler le TypeScript et exécuter le code avec nodemon en paralèle  
+- Installer lodash  
+- Créer un script dans package.json pour exécuter le script avec --watch. 
 - Prendre le code suivant et résoudre les items avec lodash  
 
 
