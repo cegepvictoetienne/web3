@@ -146,10 +146,94 @@ TailwindCSS est un framework CSS utilitaire qui permet de concevoir des interfac
 |**Headwind**|Cet outil trie automatiquement vos classes Tailwind dans un ordre logique. Cela rend votre code plus lisible.|[Lien vers l'extension](https://marketplace.visualstudio.com/items?itemName=heybourn.headwind)  
 |**Prettier - Code formatter**|Utilisez cette extension pour vous assurer que votre code React, y compris les classes Tailwind, est bien formaté.|[Lien vers l'extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)  
 
+## Classes Tailwind  
 
-# Personnages avec TailwindCSS
+### Couleurs  
+
+``` ts
+<div className="bg-blue-500 text-white">
+  Fond bleu et texte blanc
+</div>
+``` 
+
+!!! manuel  
+    [Couleurs dans Tailwind](https://tailwindcss.com/docs/colors)  
 
 
-``` ts title="Personnage.tsx"
---8<-- "personnage_tw/src/components/Personnage/Personnage.tsx"
-```
+### Espacement et marges
+
+``` ts
+<div className="bg-blue-500 text-white p-4 m-2">
+  Fond bleu et texte blanc, padding 4 et marge 2
+</div>
+``` 
+
+!!! manuel  
+    [Espacement Tailwind](https://tailwindcss.com/docs/padding)  
+
+
+## Arrondir  
+
+
+``` ts
+<div className="bg-blue-500 text-white p-4 m-2 rounded-lg">
+  Fond bleu et texte blanc, padding 4 et marge 2, coins arrondis
+</div>
+``` 
+
+!!! manuel  
+    [Border radius dans Tailwind](https://tailwindcss.com/docs/border-radius)  
+
+
+## Flexbox    
+
+
+``` ts
+<div class="flex items-center justify-between p-4 bg-gray-100">
+  <span>Logo</span>
+  <button class="bg-indigo-600 text-white px-4 py-2 rounded">S'Authentifier</button>
+</div>
+``` 
+
+!!! manuel  
+    [Flex dans Tailwind](https://tailwindcss.com/docs/flex)  
+
+## Responsive      
+
+
+``` ts
+<div class="text-sm md:text-lg lg:text-2xl">
+  Redimensionner la fenêtre !
+</div>
+``` 
+
+!!! manuel  
+    [Responsive dans Tailwind](https://tailwindcss.com/docs/responsive-design) 
+
+## Grille      
+
+
+``` ts
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div class="bg-red-200 p-4">1</div>
+  <div class="bg-green-200 p-4">2</div>
+  <div class="bg-blue-200 p-4">3</div>
+</div>
+``` 
+
+!!! manuel  
+    [Grille dans Tailwind](https://tailwindcss.com/docs/grid-template-columns) 
+
+
+## Grille      
+
+
+``` ts
+<button class="bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 transition duration-200 text-white px-6 py-2 rounded">
+  Cliquez moi!
+</button>
+``` 
+
+!!! manuel  
+    [Transition dans Tailwind](https://tailwindcss.com/docs/transition-property) 
+
