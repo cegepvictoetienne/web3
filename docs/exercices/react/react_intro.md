@@ -12,5 +12,5 @@
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/intro_react/)  
+[Version démo](https://react.profinfo.ca/intro_react/)  
 

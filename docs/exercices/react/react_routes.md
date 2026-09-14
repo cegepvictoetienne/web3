@@ -16,7 +16,7 @@ Faire un site avec les éléments suivants :
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/react_router/)  
+[Version démo](https://react.profinfo.ca/react_router/)  
 
 
 

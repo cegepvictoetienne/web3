@@ -45,5 +45,5 @@ Ajouter la fonction suivante **directement en version Immer** (sans passer par l
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/exercice-web3-immer/)  
+[Version démo](https://react.profinfo.ca/exercice-web3-immer/)  
 

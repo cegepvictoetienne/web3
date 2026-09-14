@@ -17,5 +17,5 @@
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/react-styles/)  
+[Version démo](https://react.profinfo.ca/react-styles/)  
 

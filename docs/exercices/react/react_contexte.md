@@ -22,5 +22,5 @@ L’API : [https://bieres.profinfo.ca/api/bieres](https://bieres.profinfo.ca/api
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/react_context/)  
+[Version démo](https://react.profinfo.ca/react_context/)  
 

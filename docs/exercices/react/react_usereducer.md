@@ -156,5 +156,5 @@ L'application doit afficher trois écrans différents selon `etat.phase` :
   <figcaption>Aspect visuel de l'exercice useReducer React - Écran fin</figcaption>
 </figure>
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/react-usereducer/)  
+[Version démo](https://react.profinfo.ca/react-usereducer/)  
 

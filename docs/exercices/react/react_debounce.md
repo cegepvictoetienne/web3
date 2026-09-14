@@ -32,7 +32,7 @@ Ouvrir l'onglet **Réseau** des outils de développement du navigateur et taper 
 </figure>
 
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/react-api/)  
+[Version démo](https://react.profinfo.ca/react-api/)  
 
 
 

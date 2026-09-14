@@ -50,7 +50,7 @@ Implémenter les fonctionnalités suivantes en respectant l'immuabilité de l'é
 
 ### Version complétée  
 
-[Version démo](https://web3prof.fvfzs8f2k2.workers.dev/exercices-corriges/liste_epicerie/)  
+[Version démo](https://react.profinfo.ca/liste_epicerie/)  
 
 
 <figure markdown>
