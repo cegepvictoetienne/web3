@@ -14,8 +14,8 @@ Cours|Date|Sujet|Exercice
 11|2026-09-29 14:15:00|Évaluation formative|
 12|2026-10-01 08:15:00|Retour sur formatif <br/> Période de questions|
 13|2026-10-06 14:15:00|[Introduction à Next.js](lecons/next.js/introduction.md)|[Intro à Next.js](exercices/nextjs/next_intro.md)
-14|2026-10-08 08:15:00|Examen React|
-15|2026-10-20 14:15:00|[Routage dans Next.js](lecons/next.js/routage.md)|[Routage dans Next.js](exercices/nextjs/next_routage.md)
+14|2026-10-08 08:15:00|[Routage dans Next.js](lecons/next.js/routage.md)|[Routage dans Next.js](exercices/nextjs/next_routage.md)
+15|2026-10-20 14:15:00|Examen React|
 16|2026-10-22 08:15:00|[Composantes serveur VS client](lecons/next.js/composantes.md) |[Composantes dans Next.js](exercices/nextjs/next_composantes.md)
 17|2026-10-27 14:15:00|[Modes de rendu](lecons/next.js/modes_rendu.md)|[Modes de rendu](exercices/nextjs/next_modes_rendu.md)
 18|2026-10-29 08:15:00|[Hydratation](lecons/next.js/hydratation.md)|[Hydratation](exercices/nextjs/next_hydratation.md)
