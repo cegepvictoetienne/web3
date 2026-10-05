@@ -1,17 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="fr">
       <body>
         <nav>
-          <Link href="/">Accueil</Link> |{" "}
-          <Link href="/produits">Produits</Link> |{" "}
-          <Link href="/a-propos">À propos</Link>
+          <Link href="/">Accueil</Link> | <Link href="/produits">Produits</Link>{' '}
+          | <Link href="/a-propos">À propos</Link>
         </nav>
         <hr />
         {children}
