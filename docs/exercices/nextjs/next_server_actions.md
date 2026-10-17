@@ -21,4 +21,4 @@ Dans le projet créé pour [Prisma ORM](next_orm.md), utilisez les actions serve
 </figure>
 
 
-[Version démo](https://next-server-action.profinfo.ca)  
+[Version démo](https://next-server-action-local.profinfo.ca)  

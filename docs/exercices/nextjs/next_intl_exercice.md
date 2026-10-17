@@ -30,4 +30,4 @@ Créer une application Next.js bilingue (français et anglais) de boutique en li
 </figure>
 
 
-[Version démo](https://next-intl.profinfo.ca/fr)  
+[Version démo](https://next-intl-local.profinfo.ca/fr)  

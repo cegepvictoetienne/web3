@@ -20,5 +20,5 @@ Créer une application Next.js de présentation personnelle :
 </figure>
 
 
-[Version démo](https://next-intro.profinfo.ca)  
+[Version démo](https://next-intro-local.profinfo.ca)  
 

@@ -29,4 +29,4 @@ Créer une application de gestion d'une bibliothèque avec Prisma :
 </figure>
 
 
-[Version démo](https://next-orm.profinfo.ca)  
+[Version démo](https://next-orm-local.profinfo.ca)  

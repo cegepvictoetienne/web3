@@ -4,7 +4,7 @@ Construire un composant de recherche de bières qui utilise l'anti-rebond (debou
 
 ## Mise en contexte
 
-L'application affiche un champ de texte. À chaque fois que l'utilisateur tape, on veut aller chercher les bières correspondantes via l'API `https://bieres.profinfo.ca/api/bieres/search?name=<terme>`. Sans anti-rebond, chaque frappe déclenche un appel — ce qui surcharge inutilement le serveur. L'objectif est de n'appeler l'API que lorsque l'utilisateur a arrêté de taper pendant 500ms.
+L'application affiche un champ de texte. À chaque fois que l'utilisateur tape, on veut aller chercher les bières correspondantes via l'API `https://bieres-local.profinfo.ca/api/bieres/search?name=<terme>`. Sans anti-rebond, chaque frappe déclenche un appel — ce qui surcharge inutilement le serveur. L'objectif est de n'appeler l'API que lorsque l'utilisateur a arrêté de taper pendant 500ms.
 
 Créer un outil de recherche avec un champ de recherche qui lance une requête quand l'utilisateur entre du texte, sans besoin de cliquer sur un bouton. 
 
@@ -32,7 +32,7 @@ Ouvrir l'onglet **Réseau** des outils de développement du navigateur et taper 
 </figure>
 
 
-[Version démo](https://react.profinfo.ca/react-api/)  
+[Version démo](https://react-local.profinfo.ca/react-api/)  
 
 
 

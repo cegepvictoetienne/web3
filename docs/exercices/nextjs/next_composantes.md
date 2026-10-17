@@ -19,4 +19,4 @@ Créer une page de catalogue de livres combinant Server et Client Components :
 </figure>
 
 
-[Version démo](https://next-server-client.profinfo.ca)  
+[Version démo](https://next-server-client-local.profinfo.ca)  

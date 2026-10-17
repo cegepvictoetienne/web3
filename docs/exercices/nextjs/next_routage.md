@@ -18,4 +18,4 @@ Créer un mini site de recettes de cuisine :
 </figure>
 
 
-[Version démo](https://next-routage.profinfo.ca)  
+[Version démo](https://next-routage-local.profinfo.ca)  

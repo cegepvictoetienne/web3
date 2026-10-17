@@ -17,5 +17,5 @@
 </figure>
 
 
-[Version démo](https://react.profinfo.ca/react-styles/)  
+[Version démo](https://react-local.profinfo.ca/react-styles/)  
 

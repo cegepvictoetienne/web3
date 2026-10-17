@@ -11,7 +11,7 @@ Au minimum, l'application doit avoir :
 - Les composants de shadcn   
 
 
-L’API : [https://bieres.profinfo.ca/api/bieres](https://bieres.profinfo.ca/api/bieres)  
+L’API : [https://bieres-local-local.profinfo.ca/api/bieres](https://bieres.profinfo.ca/api/bieres)  
 
 
 ## Version démo  
@@ -22,5 +22,5 @@ L’API : [https://bieres.profinfo.ca/api/bieres](https://bieres.profinfo.ca/api
 </figure>
 
 
-[Version démo](https://react.profinfo.ca/react_context/)  
+[Version démo](https://react-local.profinfo.ca/react_context/)  
 

@@ -12,5 +12,5 @@
 </figure>
 
 
-[Version démo](https://react.profinfo.ca/intro_react/)  
+[Version démo](https://react-local.profinfo.ca/intro_react/)  
 

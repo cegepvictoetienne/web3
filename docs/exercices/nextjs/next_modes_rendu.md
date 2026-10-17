@@ -56,4 +56,4 @@ Route (app)      Revalidate  Expire
 </figure>
 
 
-[Version démo](https://next-rendu.profinfo.ca)  
+[Version démo](https://next-rendu-local.profinfo.ca)  

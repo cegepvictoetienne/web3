@@ -3,7 +3,7 @@
 Il est préférable d’utiliser la librairie Axios pour aller chercher vos données de l’API :
 
 ``` ts title="fetch_bieres.ts"
-axios.get('https://bieres.profinfo.ca/api/bieres').then((response) => {
+axios.get('https://bieres-local.profinfo.ca/api/bieres').then((response) => {
   setListeBieres(response.data.bieres);
 });
 ```

@@ -20,4 +20,4 @@ Dans le projet créé pour [Prisma ORM](next_orm.md), ajoutez une API REST :
 </figure>
 
 
-[Version démo](https://next-orm.profinfo.ca/api/auteurs)  
+[Version démo](https://next-orm-local.profinfo.ca/api/auteurs)  

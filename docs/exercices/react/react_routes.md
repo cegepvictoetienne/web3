@@ -16,7 +16,7 @@ Faire un site avec les éléments suivants :
 </figure>
 
 
-[Version démo](https://react.profinfo.ca/react_router/)  
+[Version démo](https://react-local.profinfo.ca/react_router/)  
 
 
 
