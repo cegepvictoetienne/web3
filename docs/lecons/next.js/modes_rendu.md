@@ -34,7 +34,11 @@ Le rendu statique est idéal pour les pages dont le contenu change rarement :
 Une page statique avec des données lues d'un API (fetch) peut être généré statiquement au moment de la compilation. La page est quand même générée une seule fois, mais avec des données réelles.
 
 ``` ts title="app/produits/page.tsx"
+import { cacheLife } from 'next/cache'
+
 export default async function ProduitsPage() {
+  'use cache'
+  cacheLife({ revalidate: Infinity, expire: Infinity })
   // Ce fetch s'exécute une seule fois, au moment de la compilation
   const response = await fetch("https://api.exemple.com/produits");
   const produits = await response.json();
@@ -57,31 +61,44 @@ export default async function ProduitsPage() {
 Si la page générée avec des données lors de la compilation doit être regénérée périodiquement, il faut utiliser le rendu statique incrémental.
 
 ``` ts title="app/produits/page.tsx"
-export const revalidate = 60; // Régénère la page au maximum toutes les 60 secondes
+import { cacheLife } from 'next/cache'
+import { Suspense } from 'react';
 
-export default async function ProduitsPage() {
-  const response = await fetch("https://api.exemple.com/produits");
-  const produits = await response.json();
 
-  return (
-    <main>
-      <h1>Produits</h1>
-      <ul>
-        {produits.map((produit: { id: number; nom: string }) => (
-          <li key={produit.id}>{produit.nom}</li>
-        ))}
-      </ul>
-    </main>
-  );
+export  async function Temperature() {
+    'use cache'
+    cacheLife({ revalidate: 60, expire: Infinity })
+
+    type imeteo = {
+        current_weather: 
+        {
+            temperature: number,
+            windspeed: number
+        },
+        nom: string,
+    }
+    const results =  await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.05&longitude=-71.96&current_weather=true');
+    console.log(results);
+    const meteo: imeteo =  await results.json();
+
+
+    return (
+        <div>
+            température : {meteo.current_weather.temperature}
+        </div>
+    )
+} 
+
+export default async function MeteoPage() {
+    
+    return (
+        <Suspense>
+            <Temperature/>
+        </Suspense>
+    )
+
+    
 }
-```
-
-On peut aussi définir le délai de revalidation directement dans l'option `next` du `fetch` :
-
-``` ts title="fetch avec revalidation"
-const response = await fetch("https://api.exemple.com/produits", {
-  next: { revalidate: 60 }, // Revalide les données toutes les 60 secondes
-});
 ```
 
 Utile pour :  
@@ -96,23 +113,42 @@ Si la fraîcheur des données est essentielle, il faut s'assurer que la page soi
 Il faut utiliser `export const dynamic = "force-dynamic"` ou accédez à des données de la requête comme les témoins ou les en-têtes :
 
 ``` ts title="app/profil/page.tsx"
-import { cookies } from "next/headers";
 
-export default async function ProfilPage() {
-  // L'accès aux témoins force automatiquement le rendu dynamique
-  const magasinTemoins = await cookies();
-  const utilisateurId = magasinTemoins.get("utilisateur_id")?.value;
+import { Suspense } from 'react';
 
-  const response = await fetch(`https://api.exemple.com/utilisateurs/${utilisateurId}`, {
+
+export  async function Temperature() {
+
+    type imeteo = {
+        current_weather: 
+        {
+            temperature: number,
+            windspeed: number
+        },
+        nom: string,
+    }
+    const results =  await fetch('https://api.open-meteo.com/v1/forecast?latitude=46.05&longitude=-71.96&current_weather=true',  {
     cache: "no-store", // Désactive le cache pour toujours obtenir des données fraîches
   });
-  const utilisateur = await response.json();
+    console.log(results);
+    const meteo: imeteo =  await results.json();
 
-  return (
-    <main>
-      <h1>Profil de {utilisateur.nom}</h1>
-    </main>
-  );
+
+    return (
+        <div>
+            température : {meteo.current_weather.temperature}
+        </div>
+    )
+} 
+
+export default async function MeteoPage() {
+    
+    return (
+        <Suspense>
+            <Temperature/>
+        </Suspense>
+    )
+    
 }
 ```
 
@@ -157,10 +193,12 @@ Route (app)      Revalidate  Expire
 ├ ○ /a-propos
 ├ ƒ /profil
 └ ○ /produits           60s      1y
+└ ◐ /meteo
 
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
+◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
 ```
 
 !!! manuel
