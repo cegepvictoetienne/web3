@@ -110,7 +110,7 @@ Utile pour :
 
 Si la fraîcheur des données est essentielle, il faut s'assurer que la page soit générée à chaque appel. C'est le SSR.
 
-Il faut utiliser `export const dynamic = "force-dynamic"` ou accédez à des données de la requête comme les témoins ou les en-têtes :
+Il faut utiliser `cache: "no-store"` :
 
 ``` ts title="app/profil/page.tsx"
 
@@ -191,13 +191,12 @@ Route (app)      Revalidate  Expire
 ┌ ○ /
 ├ ○ /_not-found
 ├ ○ /a-propos
-├ ƒ /profil
+├ ◐ /profil
 └ ○ /produits           60s      1y
 └ ◐ /meteo
 
 
 ○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
 ◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
 ```
 
