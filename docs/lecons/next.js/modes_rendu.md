@@ -257,7 +257,7 @@ Une même route peut combiner **les trois approches**. C'est le prérendu partie
 
 Exemple : une page de produit.
 
-app/produits/[id]/page.tsx
+app/produits/\[id\]/page.tsx
 
 ```tsx
 import { Suspense } from 'react';
