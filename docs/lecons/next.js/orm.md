@@ -21,14 +21,14 @@ Il existe plusieurs modules ORM, mais Prisma est largement utilisé. Dans le cou
 ### Installer Prisma
 
 ``` nodejsrepl title="console"
-npm install prisma --save-dev
+npm install prisma@prev --save-dev
 npm install @prisma/client @prisma/adapter-mariadb
 ```
 
 ### Initialiser Prisma avec MySQL
 
 ``` nodejsrepl title="console"
-npx prisma init --datasource-provider mysql
+npx prisma init --datasource-provider mysql --output ../generated/prisma
 ```
 
 On se retrouve avec :
