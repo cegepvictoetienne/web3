@@ -227,6 +227,12 @@ export default defineConfig({
 
 ```
 
+### Installer TSX et dotenv
+
+``` bash
+  npm install tsx dotenv -D
+```
+
 ### Exécuter le seed
 
 ``` nodejsrepl title="console"
