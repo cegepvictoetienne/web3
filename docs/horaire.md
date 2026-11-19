@@ -21,12 +21,12 @@ Cours|Date|Sujet|Exercice
 18|2026-10-29 08:15:00|[Internationalisation avec Next.js](lecons/next.js/next_intl.md)|[Internationalisation](exercices/nextjs/next_intl_exercice.md)
 19|2026-11-03 14:15:00|[Prisma ORM](lecons/next.js/orm.md)|[ORM](exercices/nextjs/next_orm.md)
 20|2026-11-05 08:15:00|[Prisma ORM - Suite](lecons/next.js/orm.md)|[ORM](exercices/nextjs/next_orm.md)
-21|2026-11-12 08:15:00|[Server Actions et formulaires](lecons/next.js/server_actions.md)|[Server Actions](exercices/nextjs/next_server_actions.md)
+21|2026-11-12 08:15:00|[Prisma ORM - Suite](lecons/next.js/orm.md)|[ORM](exercices/nextjs/next_orm.md)
 22|2026-11-17 14:15:00|Pratique d'examen Next.js|
 23|2026-11-19 08:15:00|Retour sur pratique Next.js|
 24|2026-11-24 14:15:00|Examen Next.js|
-25|2026-11-26 08:15:00|[Better Auth - courriel et mot de passe](lecons/next.js/auth_courriel.md) <br/>[Better Auth - oauth et GitHub](lecons/next.js/auth_oauth.md) <br/>[Better Auth - protection de route](lecons/next.js/auth_protection.md)|[Better Auth - courriel et mot de passe](exercices/nextjs/auth_courriel.md) <br/>[Better Auth - oauth et GitHub](exercices/nextjs/auth_oauth.md)<br/>[Better Auth - protection de route](exercices/nextjs/auth_protection.md)
-26|2026-12-01 14:15:00|[React dans Azure](lecons/deploiement/azure_react.md)|
+25|2026-11-26 08:15:00|[Server Actions et formulaires](lecons/next.js/server_actions.md)|[Server Actions](exercices/nextjs/next_server_actions.md)
+26|2026-12-01 14:15:00|Projet formatif next.js|
 27|2026-12-03 08:15:00|Projet formatif next.js|
 28|2026-12-08 14:15:00|Projet formatif next.js|
 29|2026-12-10 08:15:00|Pratique d'examen final|
