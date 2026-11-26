@@ -16,6 +16,13 @@ help:
 	@echo "  make clean       - Supprime le dossier site/ et les caches"
 	@echo "  make rebuild     - clean + build"
 	@echo "  make deploy      - build + rsync vers le serveur"
+	@echo "  make check       - check GitHub Actions"
+
+.PHONY: check
+
+# Resolve IDs at recipe time with := inside a recipe-free shell call
+RUN_ID = $(shell gh run list -L1 --json databaseId -q '.[0].databaseId')
+JOB_ID = $(shell gh run view $(RUN_ID) --json jobs -q '.jobs[0].databaseId')
 
 # --- Installation ---
 $(VENV)/bin/activate:
@@ -42,6 +49,12 @@ build: zensical-build
 # --- Dev server (sans post-build, pour le live reload) ---
 serve: install pre-build
 	$(VENV_BIN)/zensical serve
+
+check:
+	gh run view --job $(JOB_ID)
+
+check-log:
+	gh run view --log --job $(JOB_ID)
 
 # --- Nettoyage ---
 clean:
