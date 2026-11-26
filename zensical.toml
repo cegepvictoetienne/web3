@@ -95,7 +95,7 @@ nav = [
     {"Next.js - Better Auth — Protection des routes" = "exercices/nextjs/auth_protection.md"},
     ]},
   ]},
-  {"Projet intégrateur" = "projet_integrateur.md"},
+  {"Projet de session (formatif)" = "projet_formatif.md"},
   {"Déclaration de l'utilisation de l'IA" = "declaration-ia.md"},
   {"À propos" = "apropos.md"},
   {"Techniques de l'informatique" = "https://techinfo.profinfo.ca"},
